@@ -1,0 +1,21 @@
+{
+  "name": "archer-arena",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {},
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dheu122/archer-arena.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dheu122/archer-arena/issues"
+  },
+  "homepage": "https://github.com/dheu122/archer-arena#readme"
+}
