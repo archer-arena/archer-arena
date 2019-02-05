@@ -2,6 +2,7 @@ const game = new Phaser.Game({
   type: config.gameOptions.type,
   width: config.gameOptions.width,
   height: config.gameOptions.height,
+  parent: config.gameOptions.parent,
   scene: {
     preload: preload,
     create: create,

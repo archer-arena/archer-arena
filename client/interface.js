@@ -1,3 +1,6 @@
 /*
   Functions that relate to the main.html file should go in here.
 */
+var Interface = {
+  
+}
