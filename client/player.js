@@ -6,22 +6,62 @@ var Player = {
   */
   initialize: function(game) {
     var player = {
-      x: 0,
-      y: 0,
+      speed: 100,
       physics: game.physics.add.sprite(480, 480, 'nothing'),
     }
 
+    /* 
+      Initializes movements key bindings based on configurations
+    */
+    moveKeys = game.input.keyboard.addKeys({
+      'up': config.playerOptions.controls['up'],
+      'down': config.playerOptions.controls['down'],
+      'left': config.playerOptions.controls['left'],
+      'right': config.playerOptions.controls['right']
+    });
+
+    /*
+      Input event listeners WASD for movement on 'keydown'
+    */
     game.input.keyboard.on('keydown_W', function(event) {
-      console.log('Up');
+      player.physics.setVelocityY(-player.speed)
     });
     game.input.keyboard.on('keydown_A', function(event) {
-      console.log('Left');
+      player.physics.setVelocityX(-player.speed)
     });
     game.input.keyboard.on('keydown_S', function(event) {
-      console.log('Right');
+      player.physics.setVelocityY(player.speed)
     });
     game.input.keyboard.on('keydown_D', function(event) {
-      console.log('Down');
+      player.physics.setVelocityX(player.speed)
+    });
+
+    /*
+      Input event listeners WASD for movement on 'keyup'
+    */
+    game.input.keyboard.on('keyup_W', function (event) {
+      if (moveKeys['down'].isUp)
+        player.physics.setVelocityY(0)
+      else
+        player.physics.setVelocityY(player.speed)
+    });
+    game.input.keyboard.on('keyup_S', function (event) {
+      if (moveKeys['up'].isUp)
+        player.physics.setVelocityY(0)
+      else
+        player.physics.setVelocityY(-player.speed)
+    });
+    game.input.keyboard.on('keyup_A', function (event) {
+      if (moveKeys['right'].isUp)
+        player.physics.setVelocityX(0)
+      else
+        player.physics.setVelocityX(player.speed)
+    });
+    game.input.keyboard.on('keyup_D', function (event) {
+      if (moveKeys['left'].isUp)
+        player.physics.setVelocityX(0)
+      else
+        player.physics.setVelocityX(-player.speed)
     });
 
     game.player = player;
