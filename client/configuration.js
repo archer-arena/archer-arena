@@ -19,4 +19,8 @@ var config =
       'right': Phaser.Input.Keyboard.KeyCodes.D
     }
   }
+  
+  //enable mouse
+  game.input.mouse.capture = true;
+
 };

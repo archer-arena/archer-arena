@@ -1,3 +1,4 @@
+import { LoaderParser } from "phaser-ce";
 
 var Player = {
   /*
@@ -64,7 +65,6 @@ var Player = {
       else
         player.physics.setVelocityX(-player.speed)
     });
-
 
     /*
       Crosshair functions
