@@ -3,10 +3,19 @@ const game = new Phaser.Game({
   width: config.gameOptions.width,
   height: config.gameOptions.height,
   parent: config.gameOptions.parent,
+  physics: {
+    default: config.gameOptions.physics,
+    arcade: {
+      gravity: { y: 0 }
+    }
+  },
   scene: {
     preload: preload,
     create: create,
-    update: update
+    update: update,
+    extend: {
+      player: null
+    }
   }
 });
 //-----TEST PLAYER-----//
@@ -61,7 +70,7 @@ function preload()
 */
 function create()
 {
-
+  Player.initialize(this);
 }
 
 /*
