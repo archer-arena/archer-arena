@@ -1,5 +1,3 @@
-import { LoaderParser } from "phaser-ce";
-
 var Player = {
   /*
     Initializes player, called only ONCE after the player joins a server
@@ -11,6 +9,15 @@ var Player = {
       speed: 100,
       physics: main.physics.add.sprite(480, 480, 'nothing'),
     }
+
+    //enable mouse
+    Phaser.Input.Mouse.MouseManager.enabled = true;
+    Phaser.Input.Mouse.MouseManager.capture = true;
+    console.log(main.input);
+
+    main.input.on('pointerdown', function (pointer) {
+      Arrow.fireArrow();
+    })
 
     /* 
       Initializes movements key bindings based on configurations

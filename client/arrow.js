@@ -1,45 +1,46 @@
-import { LoaderParser, Bullet } from "phaser-ce";
-
 var Arrow = {
     initialize: function(main) {
         var arrow = main.physics.add.sprite(40, 10, 'nothing');
         arrow.anchor.set(0.5);
         arrow.body.allowRotation = false;
-    }
+    },
 
-    function createArrow() {
-        arrows = game.add.group();
-        arrows.enableBody = true;
-        arrows.physicsBodyType = Phaser.Physics.ARCADE;
+    createArrow: function (map) {
+        Phaser.GameObjects.Image.call(this, map, 0, 0, 'arrow');
+        this.speed = 2;
+        this.born = 0;
+        this.direction = 0;
+        this.xSpeed = 0;
+        this.ySpeed = 0;
+        this.setSize(6, 6, true);
+    },
 
-        //can change ammo count
-        arrows.createMultiple(20, 'arrow');
+    fireArrow: function (shooter, target) {
+        this.setPosition(shooter.x, shooter.y)
+        this.direction = Math.atan((target.x-this.x)/(target.y-this.y));
 
-        //when arrow is off map, it should disappear or stop at map edge
-        arrows.callAll('events.onOutOfBounds.add', 'events.onOut', resetArrow);
-        arrows.callAll('anchor.setTo', 'anchor', 0.5, 1.0);
-        arrows.setAll('checkWorldBounds', true);
-        //callAll and setAll loop over every arrow object
-
-        sprite = game.add.sprite 
-    }
-
-    function resetArrow(arrow) {
-        arrow.kill();
-    }
-
-    function updateArrow() {
-        arrow.rotation = game.physics.arcade.angleToPointer(arrow);
-        if (game.input.activePointer.leftButton.isDown) {
-            fireArrow();
+        if (target.y >= this.y) {
+            this.xSpeed = this.speed*Math.sin(this.direction);
+            this.ySpeed = this.speed*Math.cos(this.direction);
         }
-    }
-
-    function fireArrow() {
-        if (arrows.countDead() > 0) {
-            var ammo = arrows.getFirstDead();
-            ammo.reset(sprite.x - 8, sprite.y - 8);
-            game.physics.arcade.moveToPointer(ammo, 300);
+        else {
+            this.xSpeed = -this.speed*Math.sin(this.direction);
+            this.ySpeed = -this.speed*Math.cos(this.direction);
         }
-    }
+
+        this.rotation = shooter.rotation;
+        this.born = 0;
+        console.log('fireArrow');
+    },
+
+    updateArrow: function (time, delta) {
+        this.x += this.xSpeed * delta;
+        this.y += this.ySpeed * delta;
+        this.born += delta;
+        if (this.born > 1800)
+        {
+            this.setActive(false);
+            this.setVisible(false);
+        }
+    },
 }
