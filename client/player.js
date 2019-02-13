@@ -7,7 +7,7 @@ var Player = {
     var crosshair = main.physics.add.sprite(480, 480, 'nothing');
     var player = {
       speed: 100,
-      physics: main.physics.add.sprite(480, 480, 'nothing'),
+      physics: main.physics.add.sprite(480, 480, 'archer_blk'),
     }
 
     //enable mouse
