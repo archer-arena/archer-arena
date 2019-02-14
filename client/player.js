@@ -8,6 +8,12 @@ var Player = {
     var player = {
       speed: 100,
       physics: main.physics.add.sprite(480, 480, 'nothing'),
+      data: {     
+        x: 0,
+        y: 0,
+        arrows: [],
+        score: 0
+      }
     }
 
     //enable mouse
@@ -99,4 +105,28 @@ var Player = {
 
     main.player = player;
   },
+
+  update(main) {
+    main.player.data = {
+      x: main.player.physics.x,
+      y: main.player.physics.y,
+      arrows: [],
+      score: 0
+    }
+  },
+
+  updateOtherPlayers(main, roomData) {
+    for(let key in roomData.sockets) {
+      if(socket.id != key) {
+
+        // If the roomData does not have a object for a player, create one
+        if(!(key in main.otherPlayers)) {
+          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
+        } else {
+          main.otherPlayers[key].x = roomData.sockets[key].x;
+          main.otherPlayers[key].y = roomData.sockets[key].y;
+        }
+      }
+    }
+  }
 }

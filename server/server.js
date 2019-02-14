@@ -41,5 +41,13 @@ io.on('connection', function(socket) {
 
     socket.on('joinRoom', function(roomId) {
         room.joinRoom(socket, roomId);
+    });
+
+    socket.on('updatePlayerData', function(data) {
+        room.updatePlayerData(socket, data.roomId, data.player)
+    });
+
+    socket.on('fetchRoomData', function(roomId) {
+        room.fetchRoomData(socket, roomId);
     })
 });

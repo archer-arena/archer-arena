@@ -8,7 +8,8 @@ var config =
     width: window.innerWidth * window.devicePixelRatio,
     height: window.innerHeight * window.devicePixelRatio,
     parent: 'game-container',
-    physics: 'arcade'
+    physics: 'arcade',
+    updateTime: 10
   },
 
   playerOptions: {

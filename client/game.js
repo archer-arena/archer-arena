@@ -14,12 +14,14 @@ const game = new Phaser.Game({
     create: create,
     update: update,
     extend: {
-      player: null
+      player: null,
+      otherPlayers: {}
     }
   }
 });
 //-----TEST PLAYER-----//
 var player;
+var timer = 0;
 
 
 /*
@@ -41,7 +43,7 @@ function preload()
     { frameWidth: 8, frameHeight: 16 });
   this.load.spritesheet('archer_red', 'assets/graphics/player/player_red.png',
     { frameWidth: 8, frameHeight: 16 });
-  this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png'
+  this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png',
     { frameWidth: 32, frameHeight: 16});
   
   //-----MAP-----//
@@ -71,6 +73,7 @@ function preload()
 function create()
 {
   Player.initialize(this);
+  Client.initializeConnection();
 }
 
 /*
@@ -79,5 +82,18 @@ function create()
 */
 function update()
 {
-
+  /*
+    Timer will increment 1 frame, we will run the update set whenever it meets the...
+    config file's updateTimer. 
+  */
+  if(Client.roomData) {
+    timer++;
+    if(timer >= config.gameOptions.updateTime) {
+      Player.update(this);
+      Client.sendPlayerData(this.player.data);
+      Client.fetchRoomData();
+      Player.updateOtherPlayers(this, Client.roomData);
+      timer = 0;
+    }
+  }
 }
