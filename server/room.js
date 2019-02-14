@@ -14,6 +14,7 @@ module.exports = {
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
       x: 0,
       y: 0,
+      velocity: {x: 0, y: 0},
       arrows: [],
       score: 0
     };
@@ -36,6 +37,7 @@ module.exports = {
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
       x: 0,
       y: 0,
+      velocity: {x: 0, y: 0},
       arrows: [],
       score: 0
     };
