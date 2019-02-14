@@ -128,5 +128,13 @@ var Player = {
         }
       }
     }
+
+    // Check for players who have left
+    for(let key in main.otherPlayers) {
+      if(!(key in roomData.sockets)) {
+        main.otherPlayers[key].destroy();
+        delete main.otherPlayers[key];
+      }
+    }
   }
 }
