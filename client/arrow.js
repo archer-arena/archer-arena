@@ -13,6 +13,8 @@ var Arrow = {
         this.xSpeed = 0;
         this.ySpeed = 0;
         this.setSize(6, 6, true);
+
+        playerArrows = this.physics.add.group({classType: arrow, runChildUpdate: true});
     },
 
     fireArrow: function (shooter, target) {

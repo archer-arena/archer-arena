@@ -6,18 +6,26 @@ var Player = {
   initialize: function(main) {
     var crosshair = main.physics.add.sprite(480, 480, 'nothing');
     var player = {
-      speed: 100,
+      speed: 200,
       physics: main.physics.add.sprite(480, 480, 'archer_blk'),
     }
 
-    //enable mouse
+    /*
+      enable mouse
+    */
     Phaser.Input.Mouse.MouseManager.enabled = true;
     Phaser.Input.Mouse.MouseManager.capture = true;
-    console.log(main.input);
 
     main.input.on('pointerdown', function (pointer) {
       Arrow.fireArrow();
     })
+
+    /*
+      enable camera
+    */
+   main.cameras.main.setBounds(0,0,650,650);
+   main.cameras.main.setZoom = 0.5;
+   main.cameras.main.startFollow(player, true, 0.1, 0.1);
 
     /* 
       Initializes movements key bindings based on configurations
@@ -96,6 +104,23 @@ var Player = {
           crosshair.y += pointer.movementY;
       }
     }, main);
+ /*
+    // Crosshair cannot move offscreen
+    constrainCrosshair: function(crosshair) {
+      var distX = crosshair.x-player.x;
+      var distY = crosshair.x-player.y;
+
+      if (distX > 800)
+        crosshair.x = player.x+800;
+      else if (distX < -800)
+        crosshair.x = player.x-800;
+      
+      if (distY > 600)
+        crosshair.y = player.y+600;
+      else if (distY < -600)
+        crosshair.y = player.y-600;
+    }
+*/
 
     main.player = player;
   },
