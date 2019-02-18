@@ -23,9 +23,8 @@ var Player = {
     /*
       enable camera
     */
-   main.cameras.main.setBounds(0,0,650,650);
-   main.cameras.main.setZoom = 0.5;
-   main.cameras.main.startFollow(player, true, 0.1, 0.1);
+    main.cameras.main.setZoom(4);
+    main.cameras.main.startFollow(player.physics, true, 0.1, 0.1);
 
     /* 
       Initializes movements key bindings based on configurations

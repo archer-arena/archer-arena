@@ -9,6 +9,7 @@ const game = new Phaser.Game({
       gravity: { y: 0 }
     }
   },
+  pixelArt: true,
   scene: {
     preload: preload,
     create: create,
