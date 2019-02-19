@@ -51,6 +51,10 @@ var Client = {
     socket.emit('updatePlayerData', {roomId: Client.roomData.id, player: player});
   },
 
+  sendArrowData: function(arrows) {
+    socket.emit('updateArrowData', {roomId: Client.roomData.id, arrows: arrows});
+  },
+
   /*
     Client will fetch the room's data.
   */

@@ -17,8 +17,8 @@ const game = new Phaser.Game({
     extend: {
       player: null,
       otherPlayers: {},
-      arrows: [],
-      otherArrows: []
+      arrows: {},
+      otherArrows: {}
     }
   }
 });
@@ -95,8 +95,10 @@ function update()
       Player.update(this);
       Arrow.update(this);
       Client.sendPlayerData(this.player.data);
+      Client.sendArrowData(this.arrows);
       Client.fetchRoomData();
       Player.updateOtherPlayers(this, Client.roomData);
+      Arrow.updateOtherArrows(this, Client.roomData);
       timer = 0;
     }
   }
