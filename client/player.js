@@ -16,8 +16,8 @@ var Player = {
     Phaser.Input.Mouse.MouseManager.enabled = true;
     Phaser.Input.Mouse.MouseManager.capture = true;
 
-    main.input.on('pointerdown', function (pointer) {
-      Arrow.fireArrow();
+    main.input.on('pointerdown', function () {
+      Arrow.initialize(main, player.physics, crosshair);
     })
 
     /*

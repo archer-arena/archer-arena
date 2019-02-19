@@ -15,7 +15,9 @@ const game = new Phaser.Game({
     create: create,
     update: update,
     extend: {
-      player: null
+      player: null,
+      arrows: [],
+      otherArrows: []
     }
   }
 });

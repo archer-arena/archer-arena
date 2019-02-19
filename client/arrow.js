@@ -1,48 +1,49 @@
 var Arrow = {
-    initialize: function(main) {
-        var arrow = main.physics.add.sprite(40, 10, 'nothing');
-        arrow.anchor.set(0.5);
-        arrow.body.allowRotation = false;
-    },
 
-    createArrow: function (map) {
-        Phaser.GameObjects.Image.call(this, map, 0, 0, 'arrow');
-        this.speed = 2;
-        this.born = 0;
-        this.direction = 0;
-        this.xSpeed = 0;
-        this.ySpeed = 0;
-        this.setSize(6, 6, true);
-
-        playerArrows = this.physics.add.group({classType: arrow, runChildUpdate: true});
-    },
-
-    fireArrow: function (shooter, target) {
-        this.setPosition(shooter.x, shooter.y)
-        this.direction = Math.atan((target.x-this.x)/(target.y-this.y));
-
-        if (target.y >= this.y) {
-            this.xSpeed = this.speed*Math.sin(this.direction);
-            this.ySpeed = this.speed*Math.cos(this.direction);
+    initialize: function(main, shooter, target) {
+      var arrow = {
+        physics: main.physics.add.sprite(shooter.x, shooter.y, 'nothing'),
+        data: {
+          xSpeed: 0,
+          ySpeed: 0,
+          rotation: shooter.rotation,
+          life: 0,
+          maxLife: 0
         }
-        else {
-            this.xSpeed = -this.speed*Math.sin(this.direction);
-            this.ySpeed = -this.speed*Math.cos(this.direction);
-        }
+      }
 
-        this.rotation = shooter.rotation;
-        this.born = 0;
-        console.log('fireArrow');
+      arrow.physics.body.allowRotation = false;
+
+      var direction = Math.atan((target.x-shooter.x)/(target.y-shooter.y));
+      if (target.y >= shooter.y) {
+          arrow.xSpeed = config.playerOptions.arrowSpeed*Math.sin(direction);
+          arrow.ySpeed = config.playerOptions.arrowSpeed*Math.cos(direction);
+      }
+      else {
+          arrow.xSpeed = -config.playerOptions.arrowSpeed*Math.sin(direction);
+          arrow.ySpeed = -config.playerOptions.arrowSpeed*Math.cos(direction);
+      }
+      main.arrows.push(arrow);
+      //socket.emit('AddNewArrow', {roomId: id, arrow: arrow});
     },
 
-    updateArrow: function (time, delta) {
-        this.x += this.xSpeed * delta;
-        this.y += this.ySpeed * delta;
-        this.born += delta;
-        if (this.born > 1800)
-        {
-            this.setActive(false);
-            this.setVisible(false);
-        }
+    updateArrow: function (arrow, delta) {
+      arrow.data = {
+        x: arrow.physics.x,
+        y: arrow.physics.y,
+        velocity: arrow.physics.body.velocity,
+        xSpeed: arrow.data.xSpeed,
+        ySpeed: arrow.data.ySpeed,
+        rotation: arrow.data.rotation,
+        life: arrow.data.life + delta,
+        maxLife: arrow.data.maxLife
+      }
+
+      arrow.physics.x = arrow.data.xSpeed * delta;
+      arrow.physics.y = arrow.data.ySpeed * delta;
     },
+
+    updateOtherArrows: function (main, delta, life) {
+
+    }
 }
