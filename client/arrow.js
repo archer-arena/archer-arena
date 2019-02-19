@@ -5,6 +5,8 @@ var Arrow = {
         physics: main.physics.add.sprite(shooter.x, shooter.y, 'arrow_sprite'),
         data: {
           key: socket.id + '-' + Math.random().toString(36).substr(2, 5),
+          x: 0,
+          y: 0,
           xSpeed: 0,
           ySpeed: 0,
           rotation: 0,
@@ -27,18 +29,20 @@ var Arrow = {
       arrow.physics.setVelocity(arrow.data.xSpeed, arrow.data.ySpeed)
       arrow.physics.rotation = Phaser.Math.Angle.Between(shooter.x, shooter.y, target.x, target.y);
       arrow.data.rotation = arrow.physics.rotation;
-      main.arrows[arrow.data.key] = arrow.data;
+      main.arrows[arrow.data.key] = arrow;
     },
 
     update: function (main) {
       for(let key in main.arrows) {
-        main.arrows[key] = {
+        main.arrows[key].data = {
           belongsTo: socket.id,
-          xSpeed: main.arrows[key].xSpeed,
-          ySpeed: main.arrows[key].ySpeed,
-          rotation: main.arrows[key].rotation,
-          life: main.arrows[key].life + 1,
-          maxLife: main.arrows[key].maxLife
+          x: main.arrows[key].physics.x,
+          y: main.arrows[key].physics.y,
+          xSpeed: main.arrows[key].data.xSpeed,
+          ySpeed: main.arrows[key].data.ySpeed,
+          rotation: main.arrows[key].data.rotation,
+          life: main.arrows[key].data.life + 1,
+          maxLife: main.arrows[key].data.maxLife
         }
       }
     },
@@ -62,6 +66,7 @@ var Arrow = {
             main.otherArrows[key].setVelocity(roomData.arrows[key].xSpeed, roomData.arrows[key].ySpeed)
             main.otherArrows[key].rotation = roomData.arrows[key].rotation;
           } else {
+            main.physics.moveTo(main.otherArrows[key], roomData.arrows[key].x + roomData.arrows[key].xSpeed, roomData.arrows[key].y + roomData.arrows[key].ySpeed, 200, 1000);
             // Check collision?
           }
         }

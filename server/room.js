@@ -59,7 +59,7 @@ module.exports = {
   updateArrowData: function(socket, roomId, arrows) {
     const room = server.io.sockets.adapter.rooms[roomId];
     for(let key in arrows) {
-      room.arrows[key] = arrows[key];
+      room.arrows[key] = arrows[key].data;
     }
     server.client.set(roomId, JSON.stringify(room));
   },
