@@ -12,10 +12,25 @@ html, body {
   left: 0px;
 
   background-color: white;
-  opacity: 0.25;
+  opacity: 1.0;
 
   height: 100%;
   width: 100%;
+}
+
+.menu-container {
+  text-align: center;
+}
+
+#title {
+  text-align: center;
+  margin: 5% 0;
+  font-size: 5rem;
+  color: black;
+}
+
+#or {
+  text-align: center;
 }
 
 #game-container {

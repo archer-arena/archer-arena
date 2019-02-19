@@ -1,22 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <link rel="stylesheet" href="./main.css">
-      <title>Archer Arena</title>
-      <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.min.js"></script>
-      <script src="/socket.io/socket.io.js"></script>
-      <script src="./client.js"></script>
-      <script src="./configuration.js"></script>
-      <script src="./arrow.js"></script>
-      <script src="./player.js"></script>
-      <script src="./game.js"></script>
-      <script src="./interface.js"></script>
-  </head>
-  <body>
-    <div id="game-container">
-      <div id="overlay">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="./main.css">
+  <title>Archer Arena</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./client.js"></script>
+  <script src="./configuration.js"></script>
+  <script src="./arrow.js"></script>
+  <script src="./player.js"></script>
+  <script src="./game.js"></script>
+  <script src="./interface.js"></script>
+</head>
+
+<body>
+  <div id="game-container">
+    <div id="overlay">
+      <div id="landing-page">
+        <div class="menu-container">
+          <div class="row">
+            <div class="col-12">
+              <div id="title">Archer Arena</div>
+            </div>
+          </div>
+          <form action="/action_page.php">
+            <div class="form-group">
+              <div class="row justify-content-center">
+                <div class="col-10 col-sm-6 col-lg-4">
+                  <input type="text" class="form-control" id="username" placeholder="Username">
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <div class="row justify-content-center">
+                <div class="col-10 col-sm-6 col-lg-4">
+                  <input type="password" class="form-control" id="pwd" placeholder="Password">
+                </div>
+              </div>
+            </div>
+            <div class="form-group form-check">
+              <label class="form-check-label">
+                <input class="form-check-input" type="checkbox">Remember Me
+              </label>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-4 col-sm-3 col-lg-2">
+                <button type="submit" class="btn btn-primary w-100">Log In</button>
+              </div>
+            </div>
+            <div class="row justify-content-center">
+              <div class="col-4 col-sm-3 col-lg-2">
+                <a href="javascript:;" class="w-100 nav-link" class="text-white" data-toggle="modal" data-target="#registerModal">Not
+                  Registered?</a>
+              </div>
+            </div>
+            <br>
+            <div id="or">Or</div>
+            <br>
+            <div class="row justify-content-center">
+              <div class="col-5 col-sm-3 col-lg-2">
+                <button type="button" class="btn btn-secondary w-100">Play as Guest</button>
+              </div>
+            </div>
+          </form>
+        </div>
       </div>
+      <!------------------------------------------- Registration Modul End ---------------------------------------------------->
+      <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header justify-content-center">
+              <h5 class="modal-title" id="registerModalLabel">Registration</h5>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="pwd" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control" id="email" placeholder="Email Address">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="registerSubmit">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!------------------------------------------- Registration Modul End ---------------------------------------------------->
+
+
+      </nav>
     </div>
-  </body>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+</body>
+
 </html>
