@@ -9,12 +9,15 @@ const game = new Phaser.Game({
       gravity: { y: 0 }
     }
   },
+  pixelArt: true,
   scene: {
     preload: preload,
     create: create,
     update: update,
     extend: {
-      player: null
+      player: null,
+      arrows: [],
+      otherArrows: []
     }
   }
 });
