@@ -1,3 +1,9 @@
+// Temporary debug variables for server
+// Will remove on launch.
+var predictedPosition = null;
+var actualPosition = null;
+var debug = true;
+
 var Player = {
   /*
     Initializes player, called only ONCE after the player joins a server
@@ -6,8 +12,15 @@ var Player = {
   initialize: function(main) {
     var crosshair = main.physics.add.sprite(480, 480, 'nothing');
     var player = {
-      speed: 200,
-      physics: main.physics.add.sprite(480, 480, 'archer_blk'),
+      speed: 100,
+      physics: main.physics.add.sprite(480, 480, 'nothing'),
+      data: {     
+        x: 0,
+        y: 0,
+        velocity: {x: 0, y: 0},
+        arrows: [],
+        score: 0
+      }
     }
 
     /*
@@ -123,4 +136,64 @@ var Player = {
 
     main.player = player;
   },
+
+  update(main) {
+    main.player.data = {
+      x: main.player.physics.x,
+      y: main.player.physics.y,
+      velocity: main.player.physics.body.velocity,
+      arrows: [],
+      score: 0
+    }
+  },
+
+  updateOtherPlayers(main, roomData) {
+    
+    for(let key in roomData.sockets) {
+      if(socket.id != key) {
+
+        if(debug) {
+          if(!predictedPosition) {
+            predictedPosition = main.physics.add.sprite(480, 480, 'archer_blu')
+          }
+
+          if(!actualPosition) {
+            actualPosition = main.physics.add.sprite(480, 480, 'archer_red')
+          }
+        }
+
+        // If the roomData does not have a object for a player, create one
+        if(!(key in main.otherPlayers)) {
+          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
+        } else {
+          
+          if(debug) {
+            actualPosition.x = roomData.sockets[key].x;
+            actualPosition.y = roomData.sockets[key].y;
+
+            predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
+            predictedPosition.y = roomData.sockets[key].y + roomData.sockets[key].velocity.y;
+          }
+
+          if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
+            main.physics.moveTo(main.otherPlayers[key], predictedPosition.x, predictedPosition.y, 100, 1000);
+          } else {
+            if(Phaser.Math.Distance.Between(main.otherPlayers[key].x, main.otherPlayers[key].y, roomData.sockets[key].x, roomData.sockets[key].y) > 10) {
+              main.physics.moveTo(main.otherPlayers[key], roomData.sockets[key].x, roomData.sockets[key].y, 100, 1000);
+            } else {
+              main.otherPlayers[key].setVelocity(0, 0);
+            }
+          }
+        }
+      }
+    }
+
+    // Check for players who have left
+    for(let key in main.otherPlayers) {
+      if(!(key in roomData.sockets)) {
+        main.otherPlayers[key].destroy();
+        delete main.otherPlayers[key];
+      }
+    }
+  }
 }

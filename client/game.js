@@ -18,11 +18,13 @@ const game = new Phaser.Game({
       player: null,
       arrows: [],
       otherArrows: []
+      otherPlayers: {}
     }
   }
 });
 //-----TEST PLAYER-----//
 var player;
+var timer = 0;
 
 
 /*
@@ -74,6 +76,7 @@ function preload()
 function create()
 {
   Player.initialize(this);
+  Client.initializeConnection();
 }
 
 /*
@@ -82,5 +85,18 @@ function create()
 */
 function update()
 {
-
+  /*
+    Timer will increment 1 frame, we will run the update set whenever it meets the...
+    config file's updateTimer. 
+  */
+  if(Client.roomData) {
+    timer++;
+    if(timer >= config.gameOptions.updateTime) {
+      Player.update(this);
+      Client.sendPlayerData(this.player.data);
+      Client.fetchRoomData();
+      Player.updateOtherPlayers(this, Client.roomData);
+      timer = 0;
+    }
+  }
 }
