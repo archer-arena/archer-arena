@@ -23,14 +23,21 @@ var Player = {
       }
     }
 
-    //enable mouse
+    /*
+      enable mouse
+    */
     Phaser.Input.Mouse.MouseManager.enabled = true;
     Phaser.Input.Mouse.MouseManager.capture = true;
-    console.log(main.input);
 
-    main.input.on('pointerdown', function (pointer) {
-      Arrow.fireArrow();
+    main.input.on('pointerdown', function () {
+      Arrow.initialize(main, player.physics, crosshair);
     })
+
+    /*
+      enable camera
+    */
+    main.cameras.main.setZoom(4);
+    main.cameras.main.startFollow(player.physics, true, 0.1, 0.1);
 
     /* 
       Initializes movements key bindings based on configurations
@@ -109,6 +116,23 @@ var Player = {
           crosshair.y += pointer.movementY;
       }
     }, main);
+ /*
+    // Crosshair cannot move offscreen
+    constrainCrosshair: function(crosshair) {
+      var distX = crosshair.x-player.x;
+      var distY = crosshair.x-player.y;
+
+      if (distX > 800)
+        crosshair.x = player.x+800;
+      else if (distX < -800)
+        crosshair.x = player.x-800;
+      
+      if (distY > 600)
+        crosshair.y = player.y+600;
+      else if (distY < -600)
+        crosshair.y = player.y-600;
+    }
+*/
 
     main.player = player;
   },

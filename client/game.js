@@ -9,12 +9,15 @@ const game = new Phaser.Game({
       gravity: { y: 0 }
     }
   },
+  pixelArt: true,
   scene: {
     preload: preload,
     create: create,
     update: update,
     extend: {
       player: null,
+      arrows: [],
+      otherArrows: []
       otherPlayers: {}
     }
   }
@@ -32,17 +35,17 @@ function preload()
 {
   //-----PLAYER-----//
   this.load.spritesheet('archer_blk', 'assets/graphics/player/player_black.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_blu', 'assets/graphics/player/player_blue.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_grn', 'assets/graphics/player/player_green.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_pnk', 'assets/graphics/player/player_pink.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_prp', 'assets/graphics/player/player_purple.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_red', 'assets/graphics/player/player_red.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png',
     { frameWidth: 32, frameHeight: 16});
   
