@@ -18,7 +18,8 @@ const game = new Phaser.Game({
       player: null,
       arrows: [],
       otherArrows: [],
-      otherPlayers: []
+      otherPlayers: {},
+      crosshair: null
     }
   }
 });
@@ -75,6 +76,7 @@ function preload()
 */
 function create()
 {
+  Player.initialize(this);
   Client.initializeConnection();
 
   this.add.image(400, 300, 'map_layer1');
@@ -133,4 +135,7 @@ function update()
       timer = 0;
     }
   }
+  //this.crosshair.body.velocity.x = this.player.body.velocity.x;
+  //this.crosshair.body.velocity.y = this.player.body.velocity.y;
+  Player.constrainCrosshair(this.crosshair, this.player);
 }
