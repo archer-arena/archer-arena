@@ -17,8 +17,9 @@ const game = new Phaser.Game({
     extend: {
       player: null,
       arrows: [],
-      otherArrows: []
-      otherPlayers: {}
+      otherArrows: [],
+      otherPlayers: {},
+      crosshair: null
     }
   }
 });
@@ -76,7 +77,7 @@ function preload()
 function create()
 {
   Player.initialize(this);
-  Client.initializeConnection();
+  //Client.initializeConnection();
 }
 
 /*
@@ -89,6 +90,7 @@ function update()
     Timer will increment 1 frame, we will run the update set whenever it meets the...
     config file's updateTimer. 
   */
+ /*
   if(Client.roomData) {
     timer++;
     if(timer >= config.gameOptions.updateTime) {
@@ -98,5 +100,8 @@ function update()
       Player.updateOtherPlayers(this, Client.roomData);
       timer = 0;
     }
-  }
+  }*/
+  //this.crosshair.body.velocity.x = this.player.body.velocity.x;
+  //this.crosshair.body.velocity.y = this.player.body.velocity.y;
+  Player.constrainCrosshair(this.crosshair, this.player);
 }
