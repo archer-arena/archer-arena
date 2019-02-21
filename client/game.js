@@ -9,17 +9,23 @@ const game = new Phaser.Game({
       gravity: { y: 0 }
     }
   },
+  pixelArt: true,
   scene: {
     preload: preload,
     create: create,
     update: update,
     extend: {
-      player: null
+      player: null,
+      arrows: [],
+      otherArrows: [],
+      otherPlayers: {},
+      crosshair: null
     }
   }
 });
 //-----TEST PLAYER-----//
 var player;
+var timer = 0;
 
 
 /*
@@ -30,18 +36,18 @@ function preload()
 {
   //-----PLAYER-----//
   this.load.spritesheet('archer_blk', 'assets/graphics/player/player_black.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_blu', 'assets/graphics/player/player_blue.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_grn', 'assets/graphics/player/player_green.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_pnk', 'assets/graphics/player/player_pink.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_prp', 'assets/graphics/player/player_purple.png',
-    { frameWidth: 8, frameHeight: 16 });
+    { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_red', 'assets/graphics/player/player_red.png',
-    { frameWidth: 8, frameHeight: 16 });
-  this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png'
+    { frameWidth: 15, frameHeight: 16 });
+  this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png',
     { frameWidth: 32, frameHeight: 16});
   
   //-----MAP-----//
@@ -71,6 +77,42 @@ function preload()
 function create()
 {
   Player.initialize(this);
+  Client.initializeConnection();
+
+  this.add.image(400, 300, 'map_layer1');
+  this.add.image(400, 300, 'map_layer2');
+  this.add.image(400, 300, 'map_layer3');
+ 
+  player = this.physics.add.sprite(100, 450, 'archer_blk');
+  this.anims.create({
+      key: 'right', //animation for the right direction of movement
+      frames: this.anims.generateFrameNumbers('archer_blk', { start: 0, end: 2}), //utilize the first 3 images of the spritesheet
+      frameRate: 10, //run this animation at the rate of 10 frames per second
+      repeat: -1, //-1 = loop animation
+  });
+
+  this.anims.create({
+      key: 'left', //animation for the right direction of movement
+      frames: this.anims.generateFrameNumbers('archer_blk', { start: 3, end: 5}), //utilize the first 3 images of the spritesheet
+      frameRate: 10, //run this animation at the rate of 10 frames per second
+      repeat: -1, //-1 = loop animation
+  });
+
+  player = this.physics.add.sprite(100, 450, 'archer_blk');
+  this.anims.create({
+      key: 'down', //animation for the right direction of movement
+      frames: this.anims.generateFrameNumbers('archer_blk', { start: 6, end: 8}), //utilize the first 3 images of the spritesheet
+      frameRate: 10, //run this animation at the rate of 10 frames per second
+      repeat: -1, //-1 = loop animation
+  });
+
+  player = this.physics.add.sprite(100, 450, 'archer_blk');
+  this.anims.create({
+      key: 'up', //animation for the right direction of movement
+      frames: this.anims.generateFrameNumbers('archer_blk', { start: 9, end: 11}), //utilize the first 3 images of the spritesheet
+      frameRate: 10, //run this animation at the rate of 10 frames per second
+      repeat: -1, //-1 = loop animation
+  });
 }
 
 /*
@@ -79,5 +121,21 @@ function create()
 */
 function update()
 {
-
+  /*
+    Timer will increment 1 frame, we will run the update set whenever it meets the...
+    config file's updateTimer. 
+  */
+  if(Client.roomData) {
+    timer++;
+    if(timer >= config.gameOptions.updateTime) {
+      Player.update(this);
+      Client.sendPlayerData(this.player.data);
+      Client.fetchRoomData();
+      Player.updateOtherPlayers(this, Client.roomData);
+      timer = 0;
+    }
+  }
+  //this.crosshair.body.velocity.x = this.player.body.velocity.x;
+  //this.crosshair.body.velocity.y = this.player.body.velocity.y;
+  Player.constrainCrosshair(this.crosshair, this.player);
 }

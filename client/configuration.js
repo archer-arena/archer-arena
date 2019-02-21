@@ -8,10 +8,12 @@ var config =
     width: window.innerWidth * window.devicePixelRatio,
     height: window.innerHeight * window.devicePixelRatio,
     parent: 'game-container',
-    physics: 'arcade'
+    physics: 'arcade',
+    updateTime: 10
   },
 
   playerOptions: {
+    arrowSpeed: 10,
     controls: {
       'up': Phaser.Input.Keyboard.KeyCodes.W,
       'down': Phaser.Input.Keyboard.KeyCodes.S,
