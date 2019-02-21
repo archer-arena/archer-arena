@@ -25,6 +25,11 @@ var Player = {
       }
     }
 
+    player.physics.anims.load('up');
+    player.physics.anims.load('right');
+    player.physics.anims.load('left');
+    player.physics.anims.load('down');
+
     // player vs arrow collider
     //main.physics.add.overlap(player, main.arrows, collideArrow);
 
@@ -62,15 +67,19 @@ var Player = {
     */
     main.input.keyboard.on('keydown_W', function(event) {
       player.physics.setVelocityY(-player.speed)
+      player.physics.anims.play('up');
     });
     main.input.keyboard.on('keydown_A', function(event) {
       player.physics.setVelocityX(-player.speed)
+      player.physics.anims.play('left');
     });
     main.input.keyboard.on('keydown_S', function(event) {
       player.physics.setVelocityY(player.speed)
+      player.physics.anims.play('down');
     });
     main.input.keyboard.on('keydown_D', function(event) {
       player.physics.setVelocityX(player.speed)
+      player.physics.anims.play('right');
     });
 
     /*
@@ -81,24 +90,32 @@ var Player = {
         player.physics.setVelocityY(0)
       else
         player.physics.setVelocityY(player.speed)
+
+      player.physics.anims.stop(); 
     });
     main.input.keyboard.on('keyup_S', function (event) {
       if (moveKeys['up'].isUp)
         player.physics.setVelocityY(0)
       else
         player.physics.setVelocityY(-player.speed)
+
+      player.physics.anims.stop(); 
     });
     main.input.keyboard.on('keyup_A', function (event) {
       if (moveKeys['right'].isUp)
         player.physics.setVelocityX(0)
       else
         player.physics.setVelocityX(player.speed)
+
+      player.physics.anims.stop(); 
     });
     main.input.keyboard.on('keyup_D', function (event) {
       if (moveKeys['left'].isUp)
         player.physics.setVelocityX(0)
       else
         player.physics.setVelocityX(-player.speed)
+
+      player.physics.anims.stop(); 
     });
 
     /*
