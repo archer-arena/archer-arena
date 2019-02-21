@@ -58,6 +58,7 @@ function preload()
   this.load.image('map_layer3', 'assets/graphics/map/large_layer3.png');
 
   //-----UI-----//
+  this.load.image('crosshair', 'assets/graphics/ui/crosshair.png');
   this.load.image('button', 'assets/graphics/ui/button.png');
   this.load.image('button_toggle', 'assets/graphics/ui/button_toggle.png');
   this.load.image('controls', 'assets/graphics/ui/controls.png');

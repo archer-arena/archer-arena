@@ -10,7 +10,7 @@ var Player = {
     - Input, Graphics, Draw
   */
   initialize: function(main) {
-    var crosshair = main.physics.add.sprite(480, 480, 'nothing');
+    var crosshair = main.physics.add.sprite(480, 480, 'crosshair');
     crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
