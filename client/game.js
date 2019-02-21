@@ -16,8 +16,9 @@ const game = new Phaser.Game({
     update: update,
     extend: {
       player: null,
-      arrows: [],
-      otherArrows: [],
+      otherPlayers: {},
+      arrows: {},
+      otherArrows: {},
       otherPlayers: {},
       crosshair: null
     }
@@ -48,7 +49,7 @@ function preload()
   this.load.spritesheet('archer_red', 'assets/graphics/player/player_red.png',
     { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png',
-    { frameWidth: 32, frameHeight: 16});
+    { frameWidth: 16, frameHeight: 10});
   
   //-----MAP-----//
   this.load.image('map_base', 'assets/graphics/map/map_base.png');
@@ -129,9 +130,12 @@ function update()
     timer++;
     if(timer >= config.gameOptions.updateTime) {
       Player.update(this);
+      Arrow.update(this);
       Client.sendPlayerData(this.player.data);
+      Client.sendArrowData(this.arrows);
       Client.fetchRoomData();
       Player.updateOtherPlayers(this, Client.roomData);
+      Arrow.updateOtherArrows(this, Client.roomData);
       timer = 0;
     }
   }

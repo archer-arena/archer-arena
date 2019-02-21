@@ -14,7 +14,7 @@ var Player = {
     crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
-      physics: main.physics.add.sprite(480, 480, 'nothing'),
+      physics: main.physics.add.sprite(480, 480, 'archer_blk'),
       data: {     
         x: 0,
         y: 0,

@@ -13,7 +13,7 @@ var config =
   },
 
   playerOptions: {
-    arrowSpeed: 10,
+    arrowSpeed: 200,
     controls: {
       'up': Phaser.Input.Keyboard.KeyCodes.W,
       'down': Phaser.Input.Keyboard.KeyCodes.S,

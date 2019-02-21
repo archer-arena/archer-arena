@@ -47,6 +47,10 @@ io.on('connection', function(socket) {
         room.updatePlayerData(socket, data.roomId, data.player)
     });
 
+    socket.on('updateArrowData', function(data) { 
+        room.updateArrowData(socket, data.roomId, data.arrows)
+    })
+
     socket.on('fetchRoomData', function(roomId) {
         room.fetchRoomData(socket, roomId);
     })

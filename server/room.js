@@ -15,9 +15,11 @@ module.exports = {
       x: 0,
       y: 0,
       velocity: {x: 0, y: 0},
-      arrows: [],
       score: 0
     };
+
+    // TODO: Add options to room, placeholder for now
+    server.io.sockets.adapter.rooms[roomId].arrows = {};
 
     // TODO: Add options to room, placeholder for now
     server.io.sockets.adapter.rooms[roomId].options = null;
@@ -38,7 +40,6 @@ module.exports = {
       x: 0,
       y: 0,
       velocity: {x: 0, y: 0},
-      arrows: [],
       score: 0
     };
 
@@ -52,6 +53,14 @@ module.exports = {
   updatePlayerData: function(socket, roomId, player) {
     const room = server.io.sockets.adapter.rooms[roomId];
     room.sockets[socket.id] = player;
+    server.client.set(roomId, JSON.stringify(room));
+  },
+
+  updateArrowData: function(socket, roomId, arrows) {
+    const room = server.io.sockets.adapter.rooms[roomId];
+    for(let key in arrows) {
+      room.arrows[key] = arrows[key].data;
+    }
     server.client.set(roomId, JSON.stringify(room));
   },
 
