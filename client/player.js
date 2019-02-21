@@ -11,6 +11,7 @@ var Player = {
   */
   initialize: function(main) {
     var crosshair = main.physics.add.sprite(480, 480, 'nothing');
+    crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
       physics: main.physics.add.sprite(480, 480, 'archer_blk'),
@@ -19,9 +20,16 @@ var Player = {
         y: 0,
         velocity: {x: 0, y: 0},
         arrows: [],
-        score: 0
+        score: 0,
+        health: 1       
       }
     }
+
+    // player vs arrow collider
+    //main.physics.add.overlap(player, main.arrows, collideArrow);
+
+    // player vs player collider
+    //main.physics.add.collider(player, [otherPlayer??], collidePlayer);
 
     /*
       enable mouse
@@ -116,26 +124,26 @@ var Player = {
           crosshair.y += pointer.movementY;
       }
     }, main);
- /*
-    // Crosshair cannot move offscreen
-    constrainCrosshair: function(crosshair) {
-      var distX = crosshair.x-player.x;
-      var distY = crosshair.x-player.y;
-
-      if (distX > 800)
-        crosshair.x = player.x+800;
-      else if (distX < -800)
-        crosshair.x = player.x-800;
-      
-      if (distY > 600)
-        crosshair.y = player.y+600;
-      else if (distY < -600)
-        crosshair.y = player.y-600;
-    }
-*/
 
     main.player = player;
+    main.crosshair = crosshair;
   },
+
+      // Crosshair cannot move offscreen
+      constrainCrosshair: function(crosshair, player) {
+        var distX = crosshair.x-player.x;
+        var distY = crosshair.x-player.y;
+  
+        if (distX > config.gameOptions.width)
+          crosshair.x = player.x+config.gameOptions.width;
+        else if (distX < -config.gameOptions.width)
+          crosshair.x = player.x-config.gameOptions.width;
+        
+        if (distY > config.gameOptions.height)
+          crosshair.y = player.y+config.gameOptions.height;
+        else if (distY < -config.gameOptions.height)
+          crosshair.y = player.y-config.gameOptions.height;
+      },
 
   update(main) {
     main.player.data = {
@@ -195,5 +203,24 @@ var Player = {
         delete main.otherPlayers[key];
       }
     }
+  },
+
+  /*
+  // Check if player collides with arrow
+  collideArrow(playerHit, arrowHit) {
+    if (arrowHit.active === true && playerHit.active === true) {
+      
+      playerHit.health--;
+      console.log("Player health: ", playerHit.health);
+
+      if (playerHit.health <= 0) {
+        //playerHit.setActive(false).setVisible(false);
+        //[respawn function here]
+        // otherPlayer.score++;
+      }
+
+      //arrowHit.setActive(false).setVisible(false);
+    }
   }
+*/
 }
