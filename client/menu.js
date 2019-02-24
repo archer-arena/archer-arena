@@ -3,6 +3,8 @@ function playAsGuest() {
     $("#overlay-lobby-menu").removeClass("d-none");
     $("#log-out-btn").addClass("d-none");
     $("#main-menu-btn").removeClass("d-none");
+    $("#welcome-username").addClass("d-none");
+    $("#welcome-guest").removeClass("d-none");
 }
 
 function mainMenu() {
@@ -23,4 +25,6 @@ function loggedIn() {
     $("#overlay-lobby-menu").removeClass("d-none");
     $("#main-menu-btn").addClass("d-none");
     $("#log-out-btn").removeClass("d-none");
+    $("#welcome-guest").addClass("d-none");
+    $("#welcome-username").removeClass("d-none");
 }
