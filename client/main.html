@@ -1,22 +1,323 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-      <meta charset="UTF-8">
-      <link rel="stylesheet" href="./main.css">
-      <title>Archer Arena</title>
-      <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.min.js"></script>
-      <script src="/socket.io/socket.io.js"></script>
-      <script src="./client.js"></script>
-      <script src="./configuration.js"></script>
-      <script src="./arrow.js"></script>
-      <script src="./player.js"></script>
-      <script src="./game.js"></script>
-      <script src="./interface.js"></script>
-  </head>
-  <body>
-    <div id="game-container">
-      <div id="overlay">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="./main.css">
+  <title>Archer Arena</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="./client.js"></script>
+  <script src="./configuration.js"></script>
+  <script src="./arrow.js"></script>
+  <script src="./player.js"></script>
+  <script src="./game.js"></script>
+  <script src="./interface.js"></script>
+</head>
+
+<body>
+  <div id="game-container">
+    <div id="overlay-start-menu">
+      <div id="landing-page">
+        <div class="row justify-content-center">
+          <div class="col-10 col-lg-6">
+
+            <div id="log-in-menu" class="menu-container shadow-lg">
+              <div class="row">
+                <div class="col-12">
+                  <div id="title">Archer Arena</div>
+                </div>
+              </div>
+              <form>
+                <div class="form-group">
+                  <div class="row justify-content-center">
+                    <div class="col-10 col-sm-6 col-lg-5">
+                      <input type="text" class="form-control" id="username" placeholder="Username">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <div class="row justify-content-center">
+                    <div class="col-10 col-sm-6 col-lg-5">
+                      <input type="password" class="form-control" id="pwd" placeholder="Password">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group form-check">
+                  <label class="form-check-label">
+                    <input class="form-check-input" type="checkbox">Remember Me
+                  </label>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-4 col-sm-3 col-lg-4">
+                    <button type="button" class="btn btn-primary w-100" onclick="lobbyMenuOnLogIn()">Log In</button>
+                  </div>
+                </div>
+                <div class="row justify-content-center">
+                  <div class="col-4 col-sm-3 col-lg-3">
+                    <a href="javascript:;" class="w-100 nav-link" class="text-white" data-toggle="modal" data-target="#registerModal">Not
+                      Registered?</a>
+                  </div>
+                </div>
+                <br>
+                <div id="or">Or</div>
+                <br>
+                <div class="row justify-content-center">
+                  <div class="col-5 col-sm-3 col-lg-4">
+                    <button type="button" class="btn btn-secondary w-100" onclick="lobbyMenuOn()">Play as Guest</button>
+                  </div>
+                </div>
+                <br>
+              </form>
+            </div>
+
+          </div>
+        </div>
+
       </div>
+      <!---------------------------- Registration Modul Start ------------------------->
+      <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="background-color:whitesmoke;">
+            <div class="modal-header justify-content-center">
+              <h5 class="modal-title" id="registerModalLabel">Registration</h5>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="form-group">
+                  <input type="text" class="form-control" id="username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <input type="password" class="form-control" id="pwd" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <input type="email" class="form-control" id="email" placeholder="Email Address">
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary" id="registerSubmit">Submit</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--------------------------- Registration Modul End --------------------------->
+
+      <!------------------------- Lobby Menu Overlay Start ------------------------->
+      <div id="overlay-lobby-menu" class="d-none">
+        <div class="row justify-content-center">
+          <div class="col-10">
+            <!-------------------- Lobby Title Start ---------------->
+            <div id="title-overlay" class="shadow-lg">
+              <div class="row" style="padding:15px">
+                <div class="col-7 col-lg-6">
+                  <div id="lobby-title">Game Lobby</div>
+                </div>
+                <div class="col-5 col-lg-6">
+                  <button type="button" id="main-menu-btn" class="btn btn-primary float-right" onclick="lobbyMenuOff()">Main
+                    Menu</button>
+                  <button type="button" id="log-out-btn" class="btn btn-primary float-right" onclick="mainMenu()">Log
+                    Out</button>
+                  <div id="welcome-username" class="float-right" style="margin-right: 20px; font-size: 1.5rem;">Welcome User!</div>
+                  <div id="welcome-guest" class="float-right" style="margin-right: 20px; font-size: 1.5rem">Welcome Guest!</div>
+                </div>
+              </div>
+            </div>
+            <!--------------------- Lobby Title End ----------------->
+          </div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <div class="col-10">
+            <!--------------- Lobby Search Start ------------->
+            <div id="option-overlay" class="shadow-lg">
+              <div class="row justify-content-center">
+                <div class="col-12 col-lg-6 col-xl-8">
+                  <div class="input-group">
+                    <input class="w-75" type="text" placeholder="Search for Lobby" style="border-radius: 25px">
+                    <div class="input-group-append">
+                      <button class="btn btn-outline-secondary" type="button">Search</button>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-4 col-lg-3 col-xl-2">
+                  <button type="button" class="btn btn-primary btn-block mt-3 mt-sm-3 mt-lg-0">Refresh</button>
+                </div>
+                <div class="col-4 col-lg-3 col-xl-2">
+                  <button type="button" class="btn btn-primary btn-block mt-3 mt-sm-3 mt-lg-0" data-toggle="modal"
+                    data-target="#server-creation-modal">Create Room</button>
+                </div>
+              </div>
+              <!------------- Lobby Search End ------------>
+            </div>
+          </div>
+        </div>
+        <br>
+        <div class="row justify-content-center">
+          <div class="col-10">
+            <!---------------- Server List Start ---------------->
+            <div id="lobby-overlay" class="shadow-lg">
+              <div class="row justify-content-center">
+                <div class="col-12">
+                  <div id="server-select-overlay" class="mb-3">
+                    <div class="row">
+                      <div class="col-3">
+                        <div id="text">Server Name</div>
+                      </div>
+                      <div class="col-3">
+                        <div id="text2">Created By...</div>
+                      </div>
+                      <div class="col-2">
+                        <div id="text3">GM</div>
+                      </div>
+                      <div class="col-2">
+                        <div id="text4">3/10</div>
+                      </div>
+                      <div class="col-2">
+                        <button class="btn btn-primary btn-block" id="server-join-btn">Join</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                  <div class="col-12">
+                    <div id="server-select-overlay" class="mb-3">
+                      <div class="row">
+                        <div class="col-3">
+                          <div id="text">Server Name</div>
+                        </div>
+                        <div class="col-3">
+                          <div id="text2">Created By...</div>
+                        </div>
+                        <div class="col-2">
+                          <div id="text3">GM</div>
+                        </div>
+                        <div class="col-2">
+                          <div id="text4">3/10</div>
+                        </div>
+                        <div class="col-2">
+                          <button class="btn btn-primary btn-block" id="server-join-btn">Join</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+            <!---------------- Server List End ---------------->
+          </div>
+        </div>
+        <br>
+      </div>
+      <!--------------------- Lobby Menu Overlay End ------------------------->
+
+      <!------------------ Server Creator Module Start ---------------->
+      <div class="modal fade" id="server-creation-modal" tabindex="-1" role="dialog" aria-labelledby="server-creator-label"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header justify-content-center">
+              <h5 class="modal-title" id="server-creator-label">Server Creation</h5>
+            </div>
+            <div class="modal-body">
+              <div class="row">
+                <div class="col-6">
+                  <div class="input-class">
+                    <input class="w-100" type="text" id="server-name" placeholder="Server Name" style="margin-bottom:10px; border-radius:6px;">
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-check-inline">
+                    <label class="form-check-label btn btn-default active">
+                      <input type="radio" class="form-check-input" name="optradio" onclick="publicSelect()" checked>Public
+                    </label>
+                  </div>
+                  <div class="form-check-inline">
+                    <label class="form-check-label">
+                      <input type="radio" class="form-check-input" name="optradio" onclick="privateSelect()">Private
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="input-class">
+                    <input class="w-100 d-none" type="password" id="optional-pwd" placeholder="Password" style="margin-bottom:10px; border-radius:6px;">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-6">
+                  <div class="dropdown">
+                    <button type="button" class="btn btn-primary btn-block dropdown-toggle" id="dropdown-map"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Map</button>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-map">
+                      <a class="dropdown-item" href="#">Snow</a>
+                      <a class="dropdown-item" href="#">Desert</a>
+                      <a class="dropdown-item" href="#">Random</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="dropdown">
+                    <button type="button" class="btn btn-primary btn-block dropdown-toggle" id="dropdown-game-mode"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Game Mode</button>
+                    <div class="dropdown-menu" aria-labelledby="dropdown-game-mode">
+                      <a class="dropdown-item" href="#">Battle Royal</a>
+                      <a class="dropdown-item" href="#">Capture the Flag</a>
+                      <a class="dropdown-item" href="#">Random</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-12">
+                  <div class="input-class">
+                    <input class="w-25 float-right" type="text" id="player-count" placeholder="Max Players" style="margin-top:10px; border-radius:6px;">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+              <button type="submit" class="btn btn-primary" id="registerSubmit">Create</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!------------------- Server Creator Modul End ------------------->
+
     </div>
-  </body>
+  </div>
+  <script>
+    function lobbyMenuOn() {
+      // document.getElementById("overlay-lobby-menu").style.display = "block";
+      playAsGuest();
+    }
+    function lobbyMenuOnLogIn() {
+      //document.getElementById("overlay-lobby-menu").style.display = "none";
+      loggedIn();
+    }
+
+    function lobbyMenuOff() {
+      //document.getElementById("overlay-lobby-menu").style.display = "none";
+      mainMenu();
+    }
+  </script>
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="menu.js"></script>
+</body>
+
 </html>
