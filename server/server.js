@@ -54,4 +54,8 @@ io.on('connection', function(socket) {
     socket.on('fetchRoomData', function(roomId) {
         room.fetchRoomData(socket, roomId);
     })
+
+    socket.on('fetchAllRooms', function(pageNum) {
+        room.fetchAllRooms(socket, pageNum);
+    })
 });

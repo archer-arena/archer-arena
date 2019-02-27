@@ -6,6 +6,7 @@ const socket = io();
 
 var Client = {
   roomData: null,
+  lobby: [],
   /*
     Call this in Preload(), this will connect the client (user) to...
     the server and will obtain updates from the server if needed
@@ -24,6 +25,10 @@ var Client = {
 
     socket.on('obtainFetchedRoomData', function(roomData) {
       Client.roomData = roomData;
+    });
+
+    socket.on('obtainFetchedRooms', function(rooms) {
+      Client.lobby = rooms;
     });
   },
 
@@ -61,4 +66,8 @@ var Client = {
   fetchRoomData: function() {
     socket.emit('fetchRoomData', Client.roomData.id);
   },
+
+  fetchAllRooms: function (pageNum) {
+    socket.emit('fetchAllRooms', pageNum);
+  }
 }

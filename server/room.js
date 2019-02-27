@@ -72,5 +72,26 @@ module.exports = {
 
       socket.emit('obtainFetchedRoomData', JSON.parse(data));
     });
+  },
+
+  fetchAllRooms: function(socket, pageNum) {
+    server.client.keys('*', function(error, data) {
+      roomIndexStart = (pageNum - 1) * 10;
+      roomIndexEnd = (pageNum * 10);
+
+      if(roomIndexEnd > data.length) {
+        roomIndexEnd = data.length;
+      }
+
+      let roomIds = data.slice(roomIndexStart, roomIndexEnd)
+      server.client.mget(roomIds, function(error, data) {
+        let rooms = [];
+        data.forEach(roomData => {
+          parsedRoomData = JSON.parse(roomData);
+          rooms.push(parsedRoomData);
+        });
+        socket.emit('obtainFetchedRooms', rooms);
+      });
+    });
   }
 }
