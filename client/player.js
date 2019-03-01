@@ -21,6 +21,7 @@ var Player = {
         velocity: {x: 0, y: 0},
         arrows: [],
         score: 0,
+        isFirst: false,
         health: 1       
       }
     }
@@ -222,22 +223,22 @@ var Player = {
     }
   },
 
-  /*
+  
   // Check if player collides with arrow
-  collideArrow(playerHit, arrowHit) {
-    if (arrowHit.active === true && playerHit.active === true) {
-      
+  collideArrow() {
+      /*
       playerHit.health--;
       console.log("Player health: ", playerHit.health);
 
       if (playerHit.health <= 0) {
         //playerHit.setActive(false).setVisible(false);
-        //[respawn function here]
+        if (player.isFirst) {
+          otherPlayer.score = otherPlayer.score + player.score;
+        }
         // otherPlayer.score++;
-      }
-
+        //[respawn function with score = 0 here]  
+      }*/
+      console.log("COLLIDE");
       //arrowHit.setActive(false).setVisible(false);
-    }
   }
-*/
 }
