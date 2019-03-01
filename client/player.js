@@ -34,8 +34,9 @@ var Player = {
     main.physics.add.overlap(player.physics, main.otherArrowsCollisionGroup, function(pSprite, aSprite) {
       for(let key in main.otherArrows) {
         if(main.otherArrows[key] == aSprite) {
-          console.log('You got hit by arrow ID: ' + key.slice(0, -6))
-          console.log(main.otherPlayers[key.slice(0, -6)]);
+          let shooterId = key.slice(0, -6);
+          Client.sendHitData(shooterId);
+          break;
         }
       }
     });

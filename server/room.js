@@ -74,6 +74,10 @@ module.exports = {
     });
   },
 
+  sendHitData: function(socket, shooter) {
+    console.log(socket.id, shooter);
+  },
+
   fetchAllRooms: function(socket, pageNum) {
     server.client.keys('*', function(error, data) {
       roomIndexStart = (pageNum - 1) * 10;
