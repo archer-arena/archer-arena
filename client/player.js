@@ -31,7 +31,14 @@ var Player = {
     player.physics.anims.load('down');
 
     // player vs arrow collider
-    //main.physics.add.overlap(player, main.arrows, collideArrow);
+    main.physics.add.overlap(player.physics, main.otherArrowsCollisionGroup, function(pSprite, aSprite) {
+      for(let key in main.otherArrows) {
+        if(main.otherArrows[key] == aSprite) {
+          console.log('You got hit by arrow ID: ' + key.slice(0, -6))
+          console.log(main.otherPlayers[key.slice(0, -6)]);
+        }
+      }
+    });
 
     // player vs player collider
     //main.physics.add.collider(player, [otherPlayer??], collidePlayer);
@@ -221,23 +228,4 @@ var Player = {
       }
     }
   },
-
-  /*
-  // Check if player collides with arrow
-  collideArrow(playerHit, arrowHit) {
-    if (arrowHit.active === true && playerHit.active === true) {
-      
-      playerHit.health--;
-      console.log("Player health: ", playerHit.health);
-
-      if (playerHit.health <= 0) {
-        //playerHit.setActive(false).setVisible(false);
-        //[respawn function here]
-        // otherPlayer.score++;
-      }
-
-      //arrowHit.setActive(false).setVisible(false);
-    }
-  }
-*/
 }
