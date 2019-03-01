@@ -28,3 +28,25 @@ function loggedIn() {
     $("#welcome-guest").addClass("d-none");
     $("#welcome-username").removeClass("d-none");
 }
+
+function clearRegForm() {
+    $("#regForm")[0].reset();
+}
+
+function clearServerForm() {
+    $("#server-name").val('');
+    $("#player-count").val('');
+    $("#optional-pwd").val('');
+    $('#public-radio').prop('checked', true);
+    $("#map-type-modal").get(0).selectedIndex = 0;
+    $("#game-mode-modal").get(0).selectedIndex = 0;
+    publicSelect();
+}
+
+$("#server-creation-modal").on("hidden.bs.modal", function(){
+    clearServerForm();
+});
+
+$("#registerModal").on("hidden.bs.modal", function(){
+    clearRegForm();
+});
