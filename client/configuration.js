@@ -20,5 +20,11 @@ var config =
       'left': Phaser.Input.Keyboard.KeyCodes.A,
       'right': Phaser.Input.Keyboard.KeyCodes.D
     }
+  },
+
+  mapOptions: {
+    width: 480,
+    height: 480,
+    type: null // Map type... Desert/Snow/etc?
   }
 };

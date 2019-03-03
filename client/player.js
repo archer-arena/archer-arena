@@ -35,8 +35,13 @@ var Player = {
       for(let key in main.otherArrows) {
         if(main.otherArrows[key] == aSprite) {
           let shooterId = key.slice(0, -6);
-          Client.sendHitData(shooterId);
-          break;
+          if(main.player.data.health != 0) {
+            main.player.data.health--;
+            main.player.physics.visible = false;
+            Client.sendHitData(shooterId);
+            Player.waitForRespawn(main);
+            break;
+          }
         }
       }
     });
@@ -176,7 +181,8 @@ var Player = {
       y: main.player.physics.y,
       velocity: main.player.physics.body.velocity,
       arrows: [],
-      score: 0
+      score: main.player.data.score,
+      health: main.player.data.health
     }
   },
 
@@ -208,6 +214,10 @@ var Player = {
             predictedPosition.y = roomData.sockets[key].y + roomData.sockets[key].velocity.y;
           }
 
+          if(roomData.sockets[key].health == 0) {
+            main.otherPlayers[key].visible = true;
+          }
+
           if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
             main.physics.moveTo(main.otherPlayers[key], predictedPosition.x, predictedPosition.y, 100, 1000);
           } else {
@@ -229,4 +239,23 @@ var Player = {
       }
     }
   },
+
+  waitForRespawn(main) {
+    setTimeout(function() {
+      console.log('Respawned');
+      const respawnCoords = Player.getRespawnCoordinates();
+      main.player.physics.visible = true;
+      main.player.physics.setPosition(respawnCoords.x, respawnCoords.y);
+      main.player.data.health = 1;
+    }, 5000)
+  },
+
+  getRespawnCoordinates() {
+    const x = Math.floor((Math.random() * config.mapOptions.width) + 1);
+    const y = Math.floor((Math.random() * config.mapOptions.height) + 1);
+
+    // TODO: Check if the position has a collider (wall) on it, so player does not spawn in a wall.
+
+    return {x: x, y: y}
+  }
 }
