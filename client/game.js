@@ -113,6 +113,8 @@ function create()
   });
 
   Player.initialize(this);
+  Score.initialize(this);
+  Score.sortScore();
 }
 
 /*
