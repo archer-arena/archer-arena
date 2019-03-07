@@ -74,8 +74,12 @@ module.exports = {
     });
   },
 
-  sendHitData: function(socket, shooter) {
-    console.log(socket.id, shooter);
+  sendHitData: function(socket, shooter, roomId) {
+    const room = server.io.sockets.adapter.rooms[roomId];
+    room.sockets[socket.id].health--;
+
+    // Set room message for killfeed
+    server.client.set(roomId, JSON.stringify(room));
   },
 
   fetchAllRooms: function(socket, pageNum) {

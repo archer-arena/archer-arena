@@ -61,7 +61,7 @@ var Client = {
   },
 
   sendHitData: function(shooter) {
-    socket.emit('sendHitData', shooter);
+    socket.emit('sendHitData', {shooter: shooter, roomId: Client.roomData.id});
   },
 
   /*

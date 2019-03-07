@@ -1,9 +1,3 @@
-// Temporary debug variables for server
-// Will remove on launch.
-var predictedPosition = null;
-var actualPosition = null;
-var debug = true;
-
 var Player = {
   /*
     Initializes player, called only ONCE after the player joins a server
@@ -190,31 +184,17 @@ var Player = {
     
     for(let key in roomData.sockets) {
       if(socket.id != key) {
-
-        if(debug) {
-          if(!predictedPosition) {
-            predictedPosition = main.physics.add.sprite(480, 480, 'archer_blu')
-          }
-
-          if(!actualPosition) {
-            actualPosition = main.physics.add.sprite(480, 480, 'archer_red')
-          }
-        }
-
         // If the roomData does not have a object for a player, create one
         if(!(key in main.otherPlayers)) {
           main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
         } else {
-          
-          if(debug) {
-            actualPosition.x = roomData.sockets[key].x;
-            actualPosition.y = roomData.sockets[key].y;
-
-            predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
-            predictedPosition.y = roomData.sockets[key].y + roomData.sockets[key].velocity.y;
-          }
+          let predictedPosition = {x: 0, y: 0};
+          predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
+          predictedPosition.y = roomData.sockets[key].y + roomData.sockets[key].velocity.y;
 
           if(roomData.sockets[key].health == 0) {
+            main.otherPlayers[key].visible = false;
+          } else {
             main.otherPlayers[key].visible = true;
           }
 
@@ -247,6 +227,7 @@ var Player = {
       main.player.physics.visible = true;
       main.player.physics.setPosition(respawnCoords.x, respawnCoords.y);
       main.player.data.health = 1;
+      console.log(main.player.data.health);
     }, 5000)
   },
 
