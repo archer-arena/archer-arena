@@ -51,6 +51,10 @@ io.on('connection', function(socket) {
         room.updateArrowData(socket, data.roomId, data.arrows)
     })
 
+    socket.on('sendHitData', function(data) {
+        room.sendHitData(socket, data.shooter, data.roomId);
+    });
+
     socket.on('fetchRoomData', function(roomId) {
         room.fetchRoomData(socket, roomId);
     })

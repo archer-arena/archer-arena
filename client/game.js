@@ -20,7 +20,8 @@ const game = new Phaser.Game({
       arrows: {},
       otherArrows: {},
       otherPlayers: {},
-      crosshair: null
+      crosshair: null,
+      otherArrowsCollisionGroup: null
     }
   }
 });
@@ -110,6 +111,11 @@ function create()
       frames: this.anims.generateFrameNumbers('archer_blk', { start: 9, end: 11}), //utilize the first 3 images of the spritesheet
       frameRate: 10, //run this animation at the rate of 10 frames per second
       repeat: -1, //-1 = loop animation
+  });
+
+  this.otherArrowsCollisionGroup = this.physics.add.group({
+    key: 'arrow_sprite',
+    frameQuantity: 4,
   });
 
   Player.initialize(this);

@@ -1,9 +1,3 @@
-// Temporary debug variables for server
-// Will remove on launch.
-var predictedPosition = null;
-var actualPosition = null;
-var debug = true;
-
 var Player = {
   /*
     Initializes player, called only ONCE after the player joins a server
@@ -31,7 +25,20 @@ var Player = {
     player.physics.anims.load('down');
 
     // player vs arrow collider
-    //main.physics.add.overlap(player, main.arrows, collideArrow);
+    main.physics.add.overlap(player.physics, main.otherArrowsCollisionGroup, function(pSprite, aSprite) {
+      for(let key in main.otherArrows) {
+        if(main.otherArrows[key] == aSprite) {
+          let shooterId = key.slice(0, -6);
+          if(main.player.data.health != 0) {
+            main.player.data.health--;
+            main.player.physics.visible = false;
+            Client.sendHitData(shooterId);
+            Player.waitForRespawn(main);
+            break;
+          }
+        }
+      }
+    });
 
     // player vs player collider
     //main.physics.add.collider(player, [otherPlayer??], collidePlayer);
@@ -168,7 +175,8 @@ var Player = {
       y: main.player.physics.y,
       velocity: main.player.physics.body.velocity,
       arrows: [],
-      score: 0
+      score: main.player.data.score,
+      health: main.player.data.health
     }
   },
 
@@ -176,28 +184,18 @@ var Player = {
     
     for(let key in roomData.sockets) {
       if(socket.id != key) {
-
-        if(debug) {
-          if(!predictedPosition) {
-            predictedPosition = main.physics.add.sprite(480, 480, 'archer_blu')
-          }
-
-          if(!actualPosition) {
-            actualPosition = main.physics.add.sprite(480, 480, 'archer_red')
-          }
-        }
-
         // If the roomData does not have a object for a player, create one
         if(!(key in main.otherPlayers)) {
           main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
         } else {
-          
-          if(debug) {
-            actualPosition.x = roomData.sockets[key].x;
-            actualPosition.y = roomData.sockets[key].y;
+          let predictedPosition = {x: 0, y: 0};
+          predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
+          predictedPosition.y = roomData.sockets[key].y + roomData.sockets[key].velocity.y;
 
-            predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
-            predictedPosition.y = roomData.sockets[key].y + roomData.sockets[key].velocity.y;
+          if(roomData.sockets[key].health == 0) {
+            main.otherPlayers[key].visible = false;
+          } else {
+            main.otherPlayers[key].visible = true;
           }
 
           if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
@@ -222,22 +220,23 @@ var Player = {
     }
   },
 
-  /*
-  // Check if player collides with arrow
-  collideArrow(playerHit, arrowHit) {
-    if (arrowHit.active === true && playerHit.active === true) {
-      
-      playerHit.health--;
-      console.log("Player health: ", playerHit.health);
+  waitForRespawn(main) {
+    setTimeout(function() {
+      console.log('Respawned');
+      const respawnCoords = Player.getRespawnCoordinates();
+      main.player.physics.visible = true;
+      main.player.physics.setPosition(respawnCoords.x, respawnCoords.y);
+      main.player.data.health = 1;
+      console.log(main.player.data.health);
+    }, 5000)
+  },
 
-      if (playerHit.health <= 0) {
-        //playerHit.setActive(false).setVisible(false);
-        //[respawn function here]
-        // otherPlayer.score++;
-      }
+  getRespawnCoordinates() {
+    const x = Math.floor((Math.random() * config.mapOptions.width) + 1);
+    const y = Math.floor((Math.random() * config.mapOptions.height) + 1);
 
-      //arrowHit.setActive(false).setVisible(false);
-    }
+    // TODO: Check if the position has a collider (wall) on it, so player does not spawn in a wall.
+
+    return {x: x, y: y}
   }
-*/
 }
