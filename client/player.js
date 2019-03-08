@@ -21,6 +21,7 @@ var Player = {
         velocity: {x: 0, y: 0},
         arrows: [],
         score: 0,
+        isFirst: false,
         health: 1       
       }
     }
@@ -222,22 +223,11 @@ var Player = {
     }
   },
 
-  /*
-  // Check if player collides with arrow
-  collideArrow(playerHit, arrowHit) {
-    if (arrowHit.active === true && playerHit.active === true) {
-      
-      playerHit.health--;
-      console.log("Player health: ", playerHit.health);
+  highlightFirst (main) {
+    if (main.player.data.isFirst) {
+      //highlight with skull icon above head
 
-      if (playerHit.health <= 0) {
-        //playerHit.setActive(false).setVisible(false);
-        //[respawn function here]
-        // otherPlayer.score++;
-      }
-
-      //arrowHit.setActive(false).setVisible(false);
+      //other players can see skull and have arrow pointing to where isFirst player is offscreen
     }
-  }
-*/
+  },
 }
