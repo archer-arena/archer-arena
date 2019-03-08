@@ -223,22 +223,11 @@ var Player = {
     }
   },
 
-  
-  // Check if player collides with arrow
-  collideArrow() {
-      /*
-      playerHit.health--;
-      console.log("Player health: ", playerHit.health);
+  highlightFirst (main) {
+    if (main.player.data.isFirst) {
+      //highlight with skull icon above head
 
-      if (playerHit.health <= 0) {
-        //playerHit.setActive(false).setVisible(false);
-        if (player.isFirst) {
-          otherPlayer.score = otherPlayer.score + player.score;
-        }
-        // otherPlayer.score++;
-        //[respawn function with score = 0 here]  
-      }*/
-      console.log("COLLIDE");
-      //arrowHit.setActive(false).setVisible(false);
-  }
+      //other players can see skull and have arrow pointing to where isFirst player is offscreen
+    }
+  },
 }
