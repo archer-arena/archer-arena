@@ -13,6 +13,8 @@ module.exports = {client: client, io: io};
 
 var room = require('./room');
 
+const routes = require('./router')(app);
+
 app.set('port', 4200);
 app.use('/', express.static(path.join(__dirname, '../client')));
 
