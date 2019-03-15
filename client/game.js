@@ -52,15 +52,16 @@ function preload()
     { frameWidth: 16, frameHeight: 10});
   
   //-----MAP-----//
-  /* OLD MAP
+  
   this.load.image('map_base', 'assets/graphics/map/map_base.png');
   this.load.image('map_layer1', 'assets/graphics/map/large_layer1.png');
   this.load.image('map_layer2', 'assets/graphics/map/large_layer2.png');
   this.load.image('map_layer3', 'assets/graphics/map/large_layer3.png');
-  */
-  //TEST NEW MAP
+  
+  /*TEST NEW MAP
   this.load.image('tiles', 'assets/graphics/map/LPC_forest/forest_tiles.png');
   this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/test_map..json');
+  */
   //-----UI-----//
   this.load.image('crosshair', 'assets/graphics/ui/crosshair.png');
   this.load.image('button', 'assets/graphics/ui/button.png');
@@ -83,11 +84,14 @@ function preload()
 function create()
 {
   Client.initializeConnection();
-  /* OLD MAP
+  
   this.add.image(400, 300, 'map_layer1');
   this.add.image(400, 300, 'map_layer2');
   this.add.image(400, 300, 'map_layer3');
- */
+ 
+
+ /* TILED MAP
+  const map = this.make.tilemap({key: "map"});
   const tileset = map.addTilesetImage('forest_tiles', 'tiles');
 
   const belowLayer = map.createStaticLayer("Below PLayer", tileset, 0, 0);
@@ -99,6 +103,8 @@ function create()
   worldLayer.setCollisionByProperty({ collides: true});
   worldLayer_copy.setCollisionByProperty({ collides: true});
 
+
+  aboveLayer.setDepth(10);
 
   //For Debug
   const debugGraphics = this.add.graphics().setAlpha(0.75);
@@ -112,7 +118,7 @@ function create()
   	collidingTileColor: new Phaser.Display.Color(243, 134,48,255),
   	faceColor: new Phaser.Display.Color(40, 39, 37, 255)
   });
-
+*/
   this.anims.create({
       key: 'right', //animation for the right direction of movement
       frames: this.anims.generateFrameNumbers('archer_blk', { start: 0, end: 2}), //utilize the first 3 images of the spritesheet
@@ -142,6 +148,7 @@ function create()
   });
 
   Player.initialize(this);
+  //this.physics.add.collider(player, map_layer3);
 }
 
 /*
