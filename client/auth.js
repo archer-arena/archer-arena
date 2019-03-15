@@ -15,14 +15,14 @@ var Auth = {
   }),
 
   register: async(username, password, email) => {
-    const response = await fetch('http://localhost:4200/api/register', {
+    return fetch('http://localhost:4200/api/register', {
       method: 'POST',
-      body: {username: username, password: password, email: email}, // string or object
       headers:{
         'Content-Type': 'application/json'
-      }
+      },
+      body: JSON.stringify({username: username, password: password, email: email}) // string or object
+    }).then(response => {
+      console.log(response);
     });
-    const myJson = await response.json(); 
-    console.log(myJson);
   }
 }

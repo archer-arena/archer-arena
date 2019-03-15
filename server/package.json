@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "auth0-js": "^9.10.0",
+    "body-parser": "^1.18.3",
     "express": "^4.16.4",
     "redis": "^2.8.0",
     "request": "^2.88.0",
