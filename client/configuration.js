@@ -1,17 +1,16 @@
 /*
   Global game configurations
 */
-console.log(Phaser);
 var config = 
 {
   gameOptions: {
     type: Phaser.AUTO,
     scale: {
-      mode: Phaser.Scale.RESIZE,
+      mode: Phaser.Scale.CENTER_BOTH,
       parent: 'game-container',
       resolution: 1,
-      width: window.outerWidth * window.devicePixelRatio,
-      height: window.outerHeight * window.devicePixelRatio,
+      width: window.outerWidth,
+      height: window.outerHeight,
     },
     physics: 'arcade',
     updateTime: 10
