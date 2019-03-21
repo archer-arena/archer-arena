@@ -1,13 +1,18 @@
 /*
   Global game configurations
 */
+console.log(Phaser);
 var config = 
 {
   gameOptions: {
     type: Phaser.AUTO,
-    width: window.innerWidth * window.devicePixelRatio,
-    height: window.innerHeight * window.devicePixelRatio,
-    parent: 'game-container',
+    scale: {
+      mode: Phaser.Scale.RESIZE,
+      parent: 'game-container',
+      resolution: 1,
+      width: window.outerWidth * window.devicePixelRatio,
+      height: window.outerHeight * window.devicePixelRatio,
+    },
     physics: 'arcade',
     updateTime: 10
   },

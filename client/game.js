@@ -1,8 +1,7 @@
 const game = new Phaser.Game({
   type: config.gameOptions.type,
   width: config.gameOptions.width,
-  height: config.gameOptions.height,
-  parent: config.gameOptions.parent,
+  scale: config.gameOptions.scale,
   physics: {
     default: config.gameOptions.physics,
     arcade: {
@@ -28,7 +27,6 @@ const game = new Phaser.Game({
 //-----TEST PLAYER-----//
 var player;
 var timer = 0;
-
 
 /*
   Similiar to Unity's "Awake()" function
