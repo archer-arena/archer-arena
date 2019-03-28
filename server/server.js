@@ -34,9 +34,9 @@ io.on('connection', function(socket) {
         console.log(socket.id);
     });
 
-    socket.on('createRoom', function() {
+    socket.on('createRoom', function(roominfo) {
         console.log(socket.id + ' is creating a room');
-        room.createRoom(socket);
+        room.createRoom(socket, roominfo);
     });
 
     socket.on('joinRoom', function(roomId) {
@@ -44,7 +44,11 @@ io.on('connection', function(socket) {
     });
 
     socket.on('updatePlayerData', function(data) {
-        room.updatePlayerData(socket, data.roomId, data.player)
+        console.log('Updating player Data');
+
+        room.updatePlayerData(socket, data.roomId, data.player);
+        // console.log('Updating player Data');
+
     });
 
     socket.on('updateArrowData', function(data) { 

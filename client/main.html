@@ -8,14 +8,15 @@
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="./main.css">
   <title>Archer Arena</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="./client.js"></script>
-  <script src="./configuration.js"></script>
-  <script src="./arrow.js"></script>
-  <script src="./player.js"></script>
-  <script src="./game.js"></script>
-  <script src="./interface.js"></script>
+  <script type="text/javascript" src="./socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="./client.js"></script>
+  <script type="text/javascript" src="./configuration.js"></script>
+  <script type="text/javascript" src="./arrow.js"></script>
+  <script type="text/javascript" src="./player.js"></script>
+  <script type="text/javascript" src="./game.js"></script>
+
 </head>
 
 <body>
@@ -101,7 +102,8 @@
               </form>
               <form id="regForm">
                 <div class="modal-footer">
-                  <button type="reset" class="btn btn-secondary" data-dismiss="modal" onclick="clearRegForm()">Close</button>
+                  <button type="reset" class="btn btn-secondary" data-dismiss="modal"
+                    onclick="clearRegForm()">Close</button>
                   <button type="submit" class="btn btn-primary" id="registerSubmit">Submit</button>
                 </div>
               </form>
@@ -146,14 +148,16 @@
             <div class="row justify-content-center">
               <div class="col-12 col-lg-6 col-xl-8">
                 <div class="input-group">
-                  <input class="w-75" type="text" placeholder="Search for Lobby" style="border-radius: 25px">
+                  <input id="search-room-filter" class="w-75" type="text" placeholder="Search for Lobby"
+                    style="border-radius: 25px; padding-left:.5em;">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary" type="button">Search</button>
                   </div>
                 </div>
               </div>
               <div class="col-4 col-lg-3 col-xl-2">
-                <button type="button" class="btn btn-primary btn-block mt-3 mt-sm-3 mt-lg-0">Refresh</button>
+                <button id="refresh-btn" type="button"
+                  class="btn btn-primary btn-block mt-3 mt-sm-3 mt-lg-0">Refresh</button>
               </div>
               <div class="col-4 col-lg-3 col-xl-2">
                 <button type="button" class="btn btn-primary btn-block mt-3 mt-sm-3 mt-lg-0" data-toggle="modal"
@@ -168,54 +172,20 @@
       <div class="row justify-content-center">
         <div class="col-10">
           <!---------------- Server List Start ---------------->
-          <div id="lobby-overlay" class="shadow-lg">
-            <div class="row justify-content-center">
-              <div class="col-12">
-                <div id="server-select-overlay" class="mb-3">
-                  <div class="row">
-                    <div class="col-3">
-                      <div id="text">Server Name</div>
-                    </div>
-                    <div class="col-3">
-                      <div id="text2">Created By...</div>
-                    </div>
-                    <div class="col-2">
-                      <div id="text3">GM</div>
-                    </div>
-                    <div class="col-2">
-                      <div id="text4">3/10</div>
-                    </div>
-                    <div class="col-2">
-                      <button class="btn btn-primary btn-block" id="server-join-btn">Join</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="row justify-content-center">
-              <div class="col-12">
-                <div id="server-select-overlay" class="mb-3">
-                  <div class="row">
-                    <div class="col-3">
-                      <div id="text">Server Name</div>
-                    </div>
-                    <div class="col-3">
-                      <div id="text2">Created By...</div>
-                    </div>
-                    <div class="col-2">
-                      <div id="text3">GM</div>
-                    </div>
-                    <div class="col-2">
-                      <div id="text4">3/10</div>
-                    </div>
-                    <div class="col-2">
-                      <button class="btn btn-primary btn-block" id="server-join-btn">Join</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+          <div class="shadow-lg" style="border-radius: 25px; padding: 15px 15px 5px 15px;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Server Name</th>
+                  <th scope="col">Creator</th>
+                  <th scope="col">Game Mode</th>
+                  <th scope="col">Players</th>
+                </tr>
+              </thead>
+              <tbody id="lobby-overlay">
 
+              </tbody>
+            </table>
           </div>
           <!---------------- Server List End ---------------->
         </div>
@@ -293,7 +263,7 @@
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal"
               onclick="clearServerForm()">Cancel</button>
-            <button type="submit" class="btn btn-primary" id="registerSubmit" data-dismiss="modal" onclick="Client.createRoom()">Create</button>
+            <button type="button" class="btn btn-primary" id="createRoomSubmit" data-dismiss="modal">Create</button>
           </div>
         </div>
       </div>
@@ -302,6 +272,10 @@
 
   </div>
   </div>
+
+  <script src="./interface.js"></script>
+  <script src="menu.js"></script>
+
   <script>
     function lobbyMenuOn() {
       playAsGuest();
@@ -309,21 +283,17 @@
     function lobbyMenuOnLogIn() {
       loggedIn();
     }
-
     function lobbyMenuOff() {
       mainMenu();
     }
+
   </script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-    crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
     integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <script src="menu.js"></script>
 </body>
 
 </html>

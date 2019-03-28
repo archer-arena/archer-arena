@@ -43,10 +43,15 @@ function clearServerForm() {
     publicSelect();
 }
 
-$("#server-creation-modal").on("hidden.bs.modal", function(){
+function loadIntoGame() {
+    $("#overlay-start-menu").addClass("d-none");
+    $("#overlay-lobby-menu").addClass("d-none");
+}
+
+$("#server-creation-modal").on("hidden.bs.modal", function () {
     clearServerForm();
 });
 
-$("#registerModal").on("hidden.bs.modal", function(){
+$("#registerModal").on("hidden.bs.modal", function () {
     clearRegForm();
 });
