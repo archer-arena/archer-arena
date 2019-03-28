@@ -50,7 +50,10 @@ function preload()
     { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png',
     { frameWidth: 16, frameHeight: 10});
-  
+
+  this.load.image('bounty_skull', 'assets/graphics/player/bounty_skull.png');
+  this.load.image('test_shape', 'assets/graphics/player/test_shape.png');
+
   //-----MAP-----//
   this.load.image('map_base', 'assets/graphics/map/map_base.png');
   this.load.image('map_layer1', 'assets/graphics/map/large_layer1.png');
@@ -142,5 +145,5 @@ function update()
   }
   //this.crosshair.body.velocity.x = this.player.body.velocity.x;
   //this.crosshair.body.velocity.y = this.player.body.velocity.y;
-  Player.constrainCrosshair(this.crosshair, this.player);
+  //Player.constrainCrosshair(this.crosshair, this.player);
 }

@@ -7,7 +7,7 @@ var Score = {
             scoreArr: {}
         }
 
-        scoreArr = leaderboard.you.data.push(players);
+        //scoreArr = leaderboard.you.data.push(leaderboard.players);
     },
 
     //edit to pass in array of scores with ids
