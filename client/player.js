@@ -25,6 +25,40 @@ var Player = {
         health: 1       
       }
     }
+    
+    var particles = main.add.particles('bounty_skull');
+
+    /*var emitter = particles.createEmitter({
+      frame: 'test_shape',
+      lifespan: 200,
+      speed: 200,
+      alpha: 1,
+      scale: 1
+    });*/
+    var testTween = main.tweens.addCounter({
+      from: -0.5,
+      to: 1,
+      duration: 4000,
+      ease: 'Sine.easeInOut'
+    });
+    var testPro = {
+      active: true,
+      update: function (particle)
+      {
+          particle.alpha = testTween.getValue();
+      }
+    }
+    particles.addGravityWell(testPro);
+    var emitter = particles.createEmitter();
+    emitter.setSpeed(5);
+    emitter.setLifespan(500);
+    emitter.setScale(0.75, 0.75);
+
+
+
+  //if (main.player.data.isFirst) {
+    emitter.startFollow(player.physics);
+  //}
 
     player.physics.anims.load('up');
     player.physics.anims.load('right');
@@ -145,6 +179,7 @@ var Player = {
 
     main.player = player;
     main.crosshair = crosshair;
+
   },
 
       // Crosshair cannot move offscreen
@@ -223,11 +258,12 @@ var Player = {
     }
   },
 
-  highlightFirst (main) {
+  /*highlightFirst (main) {
     if (main.player.data.isFirst) {
-      //highlight with skull icon above head
+      //highlight with skull icon above head and red edge around player sprite
+      
 
       //other players can see skull and have arrow pointing to where isFirst player is offscreen
     }
-  },
+  },*/
 }
