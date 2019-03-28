@@ -72,5 +72,34 @@ module.exports = {
 
       socket.emit('obtainFetchedRoomData', JSON.parse(data));
     });
+  },
+
+  sendHitData: function(socket, shooter, roomId) {
+    const room = server.io.sockets.adapter.rooms[roomId];
+    room.sockets[socket.id].health--;
+
+    // Set room message for killfeed
+    server.client.set(roomId, JSON.stringify(room));
+  },
+
+  fetchAllRooms: function(socket, pageNum) {
+    server.client.keys('*', function(error, data) {
+      roomIndexStart = (pageNum - 1) * 10;
+      roomIndexEnd = (pageNum * 10);
+
+      if(roomIndexEnd > data.length) {
+        roomIndexEnd = data.length;
+      }
+
+      let roomIds = data.slice(roomIndexStart, roomIndexEnd)
+      server.client.mget(roomIds, function(error, data) {
+        let rooms = [];
+        data.forEach(roomData => {
+          parsedRoomData = JSON.parse(roomData);
+          rooms.push(parsedRoomData);
+        });
+        socket.emit('obtainFetchedRooms', rooms);
+      });
+    });
   }
 }
