@@ -67,7 +67,6 @@ html, body {
   max-height: 46em;
   min-height: 46em;
   overflow: scroll;
-  /*idk*/
 }
 /* Server Overlay within Lobby Overlay*/
 #server-select-overlay {
