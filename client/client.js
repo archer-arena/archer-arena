@@ -2,10 +2,13 @@
 The function of this file is to connect the client and server together.
 We will send client data and retrieve server data.
 */
+
+// This line makes Client object unreachable
 const socket = io();
 
 var Client = {
   roomData: null,
+  lobby: [],
   /*
     Call this in Preload(), this will connect the client (user) to...
     the server and will obtain updates from the server if needed
@@ -15,7 +18,7 @@ var Client = {
     socket.on('joinedRoom', function(roomData) {
       console.log('You have joined room: ' + roomData.id);
       Client.roomData = roomData;
-    })
+    });
 
     socket.on('someoneJoined', function(roomData) {
       console.log('Someone has joined your room');
@@ -24,6 +27,13 @@ var Client = {
 
     socket.on('obtainFetchedRoomData', function(roomData) {
       Client.roomData = roomData;
+    });
+
+    // Get rooms from server and store in lobby menu
+    socket.on('obtainFetchedRooms', function(rooms) {
+      console.log("client.js => we obtained fetch rooms");
+      Client.lobby = Client.lobby.concat(rooms);
+      updateserverList();
     });
   },
 
@@ -40,14 +50,16 @@ var Client = {
     Client will then join the created room.
     Call on interface, clicked on "Create Room" in create room modal.
   */
-  createRoom: function() {
-    socket.emit('createRoom');
+  createRoom: function(roominfo) {
+    socket.emit('createRoom', roominfo);
+    console.log("we're in createRoom");      
   },
 
   /*
     Sends the server the players data such as arrows, player position, etc
   */
   sendPlayerData: function(player) {
+    // console.log("client.js => sending Player Data", player);
     socket.emit('updatePlayerData', {roomId: Client.roomData.id, player: player});
   },
 
@@ -61,4 +73,9 @@ var Client = {
   fetchRoomData: function() {
     socket.emit('fetchRoomData', Client.roomData.id);
   },
-}
+
+  fetchAllRooms: function (pageNum) {
+    socket.emit('fetchAllRooms', pageNum);
+  },
+
+};

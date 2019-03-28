@@ -49,6 +49,11 @@ function preload()
     { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_red', 'assets/graphics/player/player_red.png',
     { frameWidth: 15, frameHeight: 16 });
+  this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png',
+    { frameWidth: 16, frameHeight: 10});
+
+  this.load.image('bounty_skull', 'assets/graphics/player/bounty_skull.png');
+  this.load.image('test_shape', 'assets/graphics/player/test_shape.png');
 
   //-----MAP-----//
   /* --OLD MAP--
@@ -175,6 +180,8 @@ function create()
   	});
   });
   */
+  Score.initialize(this);
+  Score.sortScore();
 }
 
 /*
@@ -192,6 +199,7 @@ function update()
     if(timer >= config.gameOptions.updateTime) {
       Player.update(this);
       Arrow.update(this);
+      // console.log("game.js => Hi im updating lul");
       Client.sendPlayerData(this.player.data);
       Client.sendArrowData(this.arrows);
       Client.fetchRoomData();
@@ -202,5 +210,5 @@ function update()
   }
   //this.crosshair.body.velocity.x = this.player.body.velocity.x;
   //this.crosshair.body.velocity.y = this.player.body.velocity.y;
-  Player.constrainCrosshair(this.crosshair, this.player);
+  //Player.constrainCrosshair(this.crosshair, this.player);
 }
