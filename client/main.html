@@ -9,13 +9,14 @@
   <link rel="stylesheet" href="./main.css">
   <title>Archer Arena</title>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.min.js"></script>
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="./client.js"></script>
-  <script src="./configuration.js"></script>
-  <script src="./arrow.js"></script>
-  <script src="./player.js"></script>
-  <script src="./score.js"></script>
-  <script src="./game.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.15.1/dist/phaser.min.js"></script>
+  <script type="text/javascript" src="./socket.io/socket.io.js"></script>
+  <script type="text/javascript" src="./client.js"></script>
+  <script type="text/javascript" src="./configuration.js"></script>
+  <script type="text/javascript" src="./arrow.js"></script>
+  <script type="text/javascript" src="./player.js"></script>
+  <script type="text/javascript" src="./game.js"></script>
   <script src="./interface.js"></script>
 </head>
 
@@ -59,7 +60,8 @@
                 </div>
                 <div class="row justify-content-center">
                   <div class="col-4 col-sm-3 col-lg-3">
-                    <a href="javascript:;" class="w-100 nav-link" class="text-white" data-toggle="modal" data-target="#registerModal">Not
+                    <a href="javascript:;" class="w-100 nav-link" class="text-white" data-toggle="modal"
+                      data-target="#registerModal">Not
                       Registered?</a>
                   </div>
                 </div>
@@ -77,7 +79,193 @@
 
           </div>
         </div>
+      </div>
+      <!---------------------------- Registration Modul Start ------------------------->
+      <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content" style="background-color:whitesmoke;">
+            <div class="modal-header justify-content-center">
+              <h5 class="modal-title" id="registerModalLabel">Registration</h5>
+            </div>
+            <div class="modal-body">
+              <form id="regForm">
+                <div class="form-group">
+                  <input name="username" type="text" class="form-control" id="username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                  <input name="pwd" type="password" class="form-control" id="pwd" placeholder="Password">
+                </div>
+                <div class="form-group">
+                  <input name="email" type="email" class="form-control" id="email" placeholder="Email Address">
+                </div>
+              </form>
+              <form id="regForm">
+                <div class="modal-footer">
+                  <button type="reset" class="btn btn-secondary" data-dismiss="modal"
+                    onclick="clearRegForm()">Close</button>
+                  <button type="submit" class="btn btn-primary" id="registerSubmit">Submit</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--------------------------- Registration Modul End --------------------------->
 
+    <!------------------------- Lobby Menu Overlay Start ------------------------->
+    <div id="overlay-lobby-menu" class="d-none">
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <!-------------------- Lobby Title Start ---------------->
+          <div id="title-overlay" class="shadow-lg">
+            <div class="row" style="padding:15px">
+              <div class="col-7 col-lg-6">
+                <div id="lobby-title">Game Lobby</div>
+              </div>
+              <div class="col-5 col-lg-6">
+                <button type="button" id="main-menu-btn" class="btn btn-primary float-right"
+                  onclick="lobbyMenuOff()">Main
+                  Menu</button>
+                <button type="button" id="log-out-btn" class="btn btn-primary float-right" onclick="mainMenu()">Log
+                  Out</button>
+                <div id="welcome-username" class="float-right" style="margin-right: 20px; font-size: 1.5rem;">Welcome
+                  User!</div>
+                <div id="welcome-guest" class="float-right" style="margin-right: 20px; font-size: 1.5rem">Welcome
+                  Guest!</div>
+              </div>
+            </div>
+          </div>
+          <!--------------------- Lobby Title End ----------------->
+        </div>
+      </div>
+      <br>
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <!--------------- Lobby Search Start ------------->
+          <div id="option-overlay" class="shadow-lg">
+            <div class="row justify-content-center">
+              <div class="col-12 col-lg-6 col-xl-8">
+                <div class="input-group">
+                  <input id="search-room-filter" class="w-75" type="text" placeholder="Search for Lobby"
+                    style="border-radius: 25px; padding-left:.5em;">
+                  <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">Search</button>
+                  </div>
+                </div>
+              </div>
+              <div class="col-4 col-lg-3 col-xl-2">
+                <button id="refresh-btn" type="button"
+                  class="btn btn-primary btn-block mt-3 mt-sm-3 mt-lg-0">Refresh</button>
+              </div>
+              <div class="col-4 col-lg-3 col-xl-2">
+                <button type="button" class="btn btn-primary btn-block mt-3 mt-sm-3 mt-lg-0" data-toggle="modal"
+                  data-target="#server-creation-modal">Create Room</button>
+              </div>
+            </div>
+            <!------------- Lobby Search End ------------>
+          </div>
+        </div>
+      </div>
+      <br>
+      <div class="row justify-content-center">
+        <div class="col-10">
+          <!---------------- Server List Start ---------------->
+          <div class="shadow-lg" style="border-radius: 25px; padding: 15px 15px 5px 15px;">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">Server Name</th>
+                  <th scope="col">Creator</th>
+                  <th scope="col">Game Mode</th>
+                  <th scope="col">Players</th>
+                </tr>
+              </thead>
+              <tbody id="lobby-overlay">
+
+              </tbody>
+            </table>
+          </div>
+          <!---------------- Server List End ---------------->
+        </div>
+      </div>
+      <br>
+    </div>
+    <!--------------------- Lobby Menu Overlay End ------------------------->
+
+    <!------------------ Server Creator Module Start ---------------->
+    <div class="modal fade" id="server-creation-modal" tabindex="-1" role="dialog"
+      aria-labelledby="server-creator-label" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header justify-content-center">
+            <h5 class="modal-title" id="server-creator-label">Server Creation</h5>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="col-6">
+                <div class="input-class">
+                  <input class="w-100" type="text" id="server-name" placeholder="Server Name"
+                    style="margin-bottom:10px; border-radius:6px;">
+                </div>
+              </div>
+              <div class="col-6">
+                <div class="form-check-inline">
+                  <label class="form-check-label btn btn-default active">
+                    <input type="radio" class="form-check-input" name="optradio" id="public-radio"
+                      onclick="publicSelect()" checked>Public
+                  </label>
+                </div>
+                <div class="form-check-inline">
+                  <label class="form-check-label">
+                    <input type="radio" class="form-check-input" name="optradio" id="private-radio"
+                      onclick="privateSelect()">Private
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <div class="input-class">
+                  <input class="w-100 d-none" type="password" id="optional-pwd" placeholder="Password"
+                    style="margin-bottom:10px; border-radius:6px;">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-6">
+                <select class="custom-select custom-select-lg mb-3" id="map-type-modal">
+                  <option selected>Map Type</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+              <div class="col-6">
+                <select class="custom-select custom-select-lg mb-3" id="game-mode-modal">
+                  <option selected>Game Mode</option>
+                  <option value="1">One</option>
+                  <option value="2">Two</option>
+                  <option value="3">Three</option>
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12">
+                <div class="input-class">
+                  <input class="w-25 float-right" type="number" id="player-count" placeholder="Max Players"
+                    style="margin-top:10px; border-radius:6px;">
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal"
+              onclick="clearServerForm()">Cancel</button>
+            <button type="button" class="btn btn-primary" id="createRoomSubmit" data-dismiss="modal">Create</button>
+          </div>
+        </div>
       </div>
       <!---------------------------- Registration Modul Start ------------------------->
       <div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="registerModalLabel"
@@ -294,31 +482,33 @@
       <!------------------- Server Creator Modul End ------------------->
 
     </div>
+    <!------------------- Server Creator Modul End ------------------->
+
   </div>
+  </div>
+
+  <script src="./interface.js"></script>
+  <script src="menu.js"></script>
+
   <script>
     function lobbyMenuOn() {
-      // document.getElementById("overlay-lobby-menu").style.display = "block";
       playAsGuest();
     }
     function lobbyMenuOnLogIn() {
-      //document.getElementById("overlay-lobby-menu").style.display = "none";
       loggedIn();
     }
-
     function lobbyMenuOff() {
-      //document.getElementById("overlay-lobby-menu").style.display = "none";
       mainMenu();
     }
+
   </script>
-
-
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
     crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
     crossorigin="anonymous"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-    crossorigin="anonymous"></script>
-  <script src="menu.js"></script>
+   <script type="text/javascript" src="./menu.js"></script>
 </body>
 
 </html>

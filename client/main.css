@@ -63,6 +63,10 @@ html, body {
   padding-right: 20px;
   padding-left: 20px;
   padding-top: 20px;
+  padding-bottom: 20px;
+  max-height: 46em;
+  min-height: 46em;
+  overflow: scroll;
 }
 /* Server Overlay within Lobby Overlay*/
 #server-select-overlay {
