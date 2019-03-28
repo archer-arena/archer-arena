@@ -25,8 +25,9 @@ const game = new Phaser.Game({
   }
 });
 //-----TEST PLAYER-----//
-var player;
+let player;
 var timer = 0;
+let showDebug = false; 
 
 
 /*
@@ -55,10 +56,20 @@ function preload()
   this.load.image('test_shape', 'assets/graphics/player/test_shape.png');
 
   //-----MAP-----//
+  /* --OLD MAP--
   this.load.image('map_base', 'assets/graphics/map/map_base.png');
   this.load.image('map_layer1', 'assets/graphics/map/large_layer1.png');
   this.load.image('map_layer2', 'assets/graphics/map/large_layer2.png');
   this.load.image('map_layer3', 'assets/graphics/map/large_layer3.png');
+  */
+
+  
+  this.load.image('ground', 'assets/graphics/map/tilemaps/snow/snow_on_stones.png');
+  this.load.image('trees', 'assets/graphics/map/tilemaps/snow/SnowyTrees.png');
+  this.load.image('rocks', 'assets/graphics/map/tilemaps/snow/cliff.png');
+  this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/snow_map.json');
+  
+
 
   //-----UI-----//
   this.load.image('crosshair', 'assets/graphics/ui/crosshair.png');
@@ -83,10 +94,45 @@ function create()
 {
   Client.initializeConnection();
 
+  /* -- OLD MAP -- 
   this.add.image(400, 300, 'map_layer1');
   this.add.image(400, 300, 'map_layer2');
   this.add.image(400, 300, 'map_layer3');
- 
+  */
+
+  const map = this.make.tilemap({key: 'map'})
+  const tileset1 = map.addTilesetImage('snow_on_stones', 'ground');
+  const tileset2 = map.addTilesetImage('SnowyTrees', 'trees');
+  const tileset3 = map.addTilesetImage('cliff', 'rocks');
+
+  const belowLayer = map.createStaticLayer('below', tileset1, 0, 0);
+  const worldLayer = map.createStaticLayer('world', tileset2, 0, 0);
+  const worldLayer2 = map.createStaticLayer('world', tileset3, 0, 0);
+  const aboveLayer = map.createStaticLayer('above', tileset2, 0, 0);
+
+
+  worldLayer.setCollisionByProperty({collides: true});
+ //worldLayer2.setCollisionByProperty({collides: true});
+
+  aboveLayer.setDepth(10);
+
+  //For Debug
+ /*
+  const debugGraphics = this.add.graphics().setAlpha(0.75);
+  world.renderDebug(debugGraphics, {
+  	tileColor: null, 
+  	collidingTileColor: new Phaser.Display.Color(243, 134,48,255),
+  	faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+  });
+ */
+  player = this.physics.add
+  	.sprite(0, 0, 'archer_blk', 'player-front')
+  	.setSize(30, 40)
+  	.setOffset(0, 24);
+
+  this.physics.add.collider(player, worldLayer);
+
+
   this.anims.create({
       key: 'right', //animation for the right direction of movement
       frames: this.anims.generateFrameNumbers('archer_blk', { start: 0, end: 2}), //utilize the first 3 images of the spritesheet
@@ -116,6 +162,24 @@ function create()
   });
 
   Player.initialize(this);
+  
+  //Debug Graphics
+  /*
+  this.input.keyboard.once('keyboard_D', event => {
+  	this.physics.world.createDebugGraphic();
+
+  	const graphics = this.add
+  		.graphics()
+  		.setAlpha(0.75)
+  		.setDepth(20);
+
+  	world.renderDebug(graphics, {
+  		tileColor: null,
+  		collidingTileColor: new Phaser.Display.Color(243, 134, 48, 255),
+  		faceColor: new Phaser.Display.Color(40, 39, 37, 255)
+  	});
+  });
+  */
   Score.initialize(this);
   Score.sortScore();
 }
