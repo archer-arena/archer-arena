@@ -95,34 +95,46 @@ var Player = {
     main.input.keyboard.on('keyup_W', function (event) {
       if (moveKeys['down'].isUp)
         player.physics.setVelocityY(0)
-      else
+      else {
         player.physics.setVelocityY(player.speed)
+        player.physics.anims.play('down');
+      }
 
-      player.physics.anims.stop(); 
+      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+        player.physics.anims.stop(); 
     });
     main.input.keyboard.on('keyup_S', function (event) {
       if (moveKeys['up'].isUp)
         player.physics.setVelocityY(0)
-      else
+      else {
         player.physics.setVelocityY(-player.speed)
+        player.physics.anims.play('up');
+      }
 
-      player.physics.anims.stop(); 
+      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+        player.physics.anims.stop(); 
     });
     main.input.keyboard.on('keyup_A', function (event) {
       if (moveKeys['right'].isUp)
         player.physics.setVelocityX(0)
-      else
+      else {
         player.physics.setVelocityX(player.speed)
+        player.physics.anims.play('right');
+      }
 
-      player.physics.anims.stop(); 
+      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+        player.physics.anims.stop(); 
     });
     main.input.keyboard.on('keyup_D', function (event) {
       if (moveKeys['left'].isUp)
         player.physics.setVelocityX(0)
-      else
+      else {
         player.physics.setVelocityX(-player.speed)
+        player.physics.anims.play('left');
+      }
 
-      player.physics.anims.stop(); 
+      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+        player.physics.anims.stop(); 
     });
 
     /*

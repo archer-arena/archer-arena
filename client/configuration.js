@@ -5,9 +5,13 @@ var config =
 {
   gameOptions: {
     type: Phaser.AUTO,
-    width: window.innerWidth * window.devicePixelRatio,
-    height: window.innerHeight * window.devicePixelRatio,
-    parent: 'game-container',
+    scale: {
+      mode: Phaser.Scale.CENTER_BOTH,
+      parent: 'game-container',
+      resolution: 1,
+      width: window.outerWidth,
+      height: window.outerHeight,
+    },
     physics: 'arcade',
     updateTime: 10
   },
