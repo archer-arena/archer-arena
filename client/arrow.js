@@ -65,9 +65,9 @@ var Arrow = {
             main.otherArrows[key] = main.physics.add.sprite(x, y, 'arrow_sprite');
             main.otherArrows[key].setVelocity(roomData.arrows[key].xSpeed, roomData.arrows[key].ySpeed)
             main.otherArrows[key].rotation = roomData.arrows[key].rotation;
+            main.otherArrowsCollisionGroup.add(main.otherArrows[key]);
           } else {
             main.physics.moveTo(main.otherArrows[key], roomData.arrows[key].x + roomData.arrows[key].xSpeed, roomData.arrows[key].y + roomData.arrows[key].ySpeed, 200, 1000);
-            // Check collision?
           }
         }
       }
@@ -75,6 +75,7 @@ var Arrow = {
       // Check for arrows that have expired
       for(let key in main.otherArrows) {
         if(!(key in roomData.arrows)) {
+          main.otherArrowsCollisionGroup.kill(main.otherArrows[key]);
           main.otherArrows[key].destroy();
           delete main.otherArrows[key];
         }
