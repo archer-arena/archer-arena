@@ -184,8 +184,8 @@ function create()
   	});
   });
   */
-  Score.initialize(this);
-  Score.sortScore();
+  //Score.initialize(this);
+  //Score.sortScore();
 }
 
 /*
