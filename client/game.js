@@ -165,8 +165,6 @@ function create()
     frameQuantity: 4,
   });
 
-  Player.initialize(this);
-  
   //Debug Graphics
   /*
   this.input.keyboard.once('keyboard_D', event => {
@@ -199,6 +197,11 @@ function update()
     config file's updateTimer. 
   */
   if(Client.roomData) {
+
+    if(!this.player) {
+      Player.initialize(this);
+    }
+
     timer++;
     if(timer >= config.gameOptions.updateTime) {
       Player.update(this);
