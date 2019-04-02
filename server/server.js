@@ -9,7 +9,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var server = http.Server(app);
 var io = socket(server);
-var client = redis.createClient();
+var client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
 module.exports = {client: client, io: io};
 
 var room = require('./room');
