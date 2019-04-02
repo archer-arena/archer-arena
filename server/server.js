@@ -1,4 +1,5 @@
 // Server-related functions will go here
+var dotenv = require('dotenv').config();
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -9,7 +10,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var server = http.Server(app);
 var io = socket(server);
-var client = redis.createClient(process.env.REDISCLOUD_URL, {no_ready_check: true});
+var client = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
 module.exports = {client: client, io: io};
 
 var room = require('./room');
