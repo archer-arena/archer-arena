@@ -47,13 +47,13 @@ io.on('connection', function(socket) {
         console.log(socket.id);
     });
 
-    socket.on('createRoom', function(roominfo) {
+    socket.on('createRoom', function(data) {
         console.log(socket.id + ' is creating a room');
-        room.createRoom(socket, roominfo);
+        room.createRoom(socket, data.roominfo, data.playerData);
     });
 
-    socket.on('joinRoom', function(roomId) {
-        room.joinRoom(socket, roomId);
+    socket.on('joinRoom', function(data) {
+        room.joinRoom(socket, data.roomId, data.playerData);
     });
 
     socket.on('updatePlayerData', function(data) {

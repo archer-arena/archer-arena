@@ -8,6 +8,9 @@ const socket = io();
 
 var Client = {
   roomData: null,
+  playerData: {
+    name: ''
+  },
   lobby: [],
   /*
     Call this in Preload(), this will connect the client (user) to...
@@ -20,9 +23,8 @@ var Client = {
       Client.roomData = roomData;
     });
 
-    socket.on('someoneJoined', function(roomData) {
-      console.log('Someone has joined your room');
-      Client.roomData = roomData;
+    socket.on('someoneJoined', function(playerName) {
+      console.log(playerName + ' has joined your room');
     });
 
     socket.on('obtainFetchedRoomData', function(roomData) {
@@ -37,12 +39,20 @@ var Client = {
     });
   },
 
+  initializePlayerData: function(guest = false) {
+    if(guest) {
+      this.playerData.name = 'Guest' + Math.floor(100000 + Math.random() * 900000);
+    } else {
+      // Obtain LocalStorage data for player information;
+    }
+  },
+
   /*
     Client will join the room given a room identifer.
     Call on interface, clicked on "Join Room".
   */
   joinRoom: function(roomId) {
-    socket.emit('joinRoom', roomId);
+    socket.emit('joinRoom', {roomId: roomId, playerData: Client.playerData});
   },
   
   /*
@@ -51,8 +61,12 @@ var Client = {
     Call on interface, clicked on "Create Room" in create room modal.
   */
   createRoom: function(roominfo) {
-    socket.emit('createRoom', roominfo);
+    socket.emit('createRoom', {roomInfo: roominfo, playerData: Client.playerData});
     console.log("we're in createRoom");      
+  },
+
+  joinOrCreateRandomRoom: function() {
+
   },
 
   /*

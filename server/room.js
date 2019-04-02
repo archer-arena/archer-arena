@@ -3,7 +3,7 @@ var uuid = require('uuid');
 var redis = require('redis');
 
 module.exports = {
-  createRoom: function (socket, roominfo) {
+  createRoom: function (socket, roominfo, playerData) {
     const roomId = uuid();
     socket.join(roomId);
 
@@ -12,6 +12,7 @@ module.exports = {
 
     // Initializes the player who created the room [Placeholder as of now]
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
+      name: playerData.name,
       x: 0,
       y: 0,
       velocity: { x: 0, y: 0 },
@@ -39,11 +40,12 @@ module.exports = {
     socket.emit('joinedRoom', room);
   },
 
-  joinRoom: function (socket, roomId) {
+  joinRoom: function (socket, roomId, playerData) {
     socket.join(roomId);
 
     // Initializes the player who is joining the room [Placeholder as of now]
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
+      name: playerData.name,
       x: 0,
       y: 0,
       velocity: { x: 0, y: 0 },
@@ -53,7 +55,7 @@ module.exports = {
     const room = server.io.sockets.adapter.rooms[roomId];
     server.client.set(roomId, JSON.stringify(room), redis.print);
     socket.emit('joinedRoom', room);
-    socket.to(roomId).emit('someoneJoined', room);
+    socket.to(roomId).emit('someoneJoined', playerData.name);
   },
 
   // Updates a single player's data inside of a room
