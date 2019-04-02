@@ -57,11 +57,8 @@ io.on('connection', function(socket) {
     });
 
     socket.on('updatePlayerData', function(data) {
-        console.log('Updating player Data');
-
         room.updatePlayerData(socket, data.roomId, data.player);
         // console.log('Updating player Data');
-
     });
 
     socket.on('updateArrowData', function(data) { 
