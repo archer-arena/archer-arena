@@ -235,6 +235,10 @@ var Player = {
         // If the roomData does not have a object for a player, create one
         if(!(key in main.otherPlayers)) {
           main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
+          main.otherPlayers[key].anims.load('up');
+          main.otherPlayers[key].anims.load('right');
+          main.otherPlayers[key].anims.load('left');
+          main.otherPlayers[key].anims.load('down');
         } else {
           let predictedPosition = {x: 0, y: 0};
           predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
@@ -244,6 +248,18 @@ var Player = {
             main.otherPlayers[key].visible = false;
           } else {
             main.otherPlayers[key].visible = true;
+          }
+
+          if(roomData.sockets[key].velocity.x > 0) {
+            main.otherPlayers[key].anims.play('right');
+          } else if(roomData.sockets[key].velocity.x < 0) {
+            main.otherPlayers[key].anims.play('left');
+          } else if(roomData.sockets[key].velocity.y > 0) {
+            main.otherPlayers[key].anims.play('up');
+          } else if(roomData.sockets[key].velocity.y < 0) {
+            main.otherPlayers[key].anims.play('down');
+          } else {
+            main.otherPlayers[key].anims.stop();
           }
 
           if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
