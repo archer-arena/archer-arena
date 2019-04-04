@@ -44,7 +44,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('updatePlayerData', function(data) {
-        console.log('Updating player Data');
+        // console.log('Updating player Data');
 
         room.updatePlayerData(socket, data.roomId, data.player);
         // console.log('Updating player Data');
@@ -61,5 +61,9 @@ io.on('connection', function(socket) {
 
     socket.on('fetchAllRooms', function(pageNum) {
         room.fetchAllRooms(socket, pageNum);
+    })
+
+    socket.on('deleteRoom', (roomId) => {
+        room.deleteRoom(socket, roomId);
     })
 });
