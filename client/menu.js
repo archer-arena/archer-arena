@@ -55,4 +55,4 @@ $("#server-creation-modal").on("hidden.bs.modal", function () {
 $("#registerModal").on("hidden.bs.modal", function () {
     clearRegForm();
 });
-}
+
