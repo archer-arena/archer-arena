@@ -28,6 +28,7 @@ const game = new Phaser.Game({
 let player;
 var timer = 0;
 let showDebug = false; 
+let worldLayer; 
 
 /*
   Similiar to Unity's "Awake()" function
@@ -105,7 +106,7 @@ function create()
   const tileset3 = map.addTilesetImage('cliff', 'rocks');
 
   const belowLayer = map.createStaticLayer('below', tileset1, 0, 0);
-  const worldLayer = map.createStaticLayer('world', tileset2, 0, 0);
+  worldLayer = map.createStaticLayer('world', tileset2, 0, 0);
   const worldLayer2 = map.createStaticLayer('world', tileset3, 0, 0);
   const aboveLayer = map.createStaticLayer('above', tileset2, 0, 0);
 
@@ -124,12 +125,6 @@ function create()
   	faceColor: new Phaser.Display.Color(40, 39, 37, 255)
   });
  */
-  player = this.physics.add
-  	.sprite(0, 0, 'archer_blk', 'player-front')
-  	.setSize(30, 40)
-  	.setOffset(0, 24);
-
-  this.physics.add.collider(player, worldLayer);
 
 
   this.anims.create({
@@ -200,6 +195,7 @@ function update()
 
     if(!this.player) {
       Player.initialize(this);
+      this.physics.add.collider(this.player.physics, worldLayer);
     }
 
     timer++;
