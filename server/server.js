@@ -4,6 +4,7 @@ var http = require('http');
 var path = require('path');
 var socket = require('socket.io');
 var redis = require('redis');
+var bodyParser = require('body-parser');
 
 var app = express();
 var server = http.Server(app);
@@ -14,6 +15,18 @@ module.exports = {client: client, io: io};
 var room = require('./room');
 
 app.set('port', 4200);
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(function(req, res, next) {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
+    res.setHeader('Access-Control-Allow-Credentials', true);
+    next();
+});
+
+const routes = require('./router')(app);
+
 app.use('/', express.static(path.join(__dirname, '../client')));
 
 app.get('/', function(request, response) {
@@ -54,6 +67,10 @@ io.on('connection', function(socket) {
     socket.on('updateArrowData', function(data) { 
         room.updateArrowData(socket, data.roomId, data.arrows)
     })
+
+    socket.on('sendHitData', function(data) {
+        room.sendHitData(socket, data.shooter, data.roomId);
+    });
 
     socket.on('fetchRoomData', function(roomId) {
         room.fetchRoomData(socket, roomId);
