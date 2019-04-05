@@ -130,6 +130,7 @@ function update()
     if(timer >= config.gameOptions.updateTime) {
       Player.update(this);
       Arrow.update(this);
+      // console.log("game.js => Hi im updating lul");
       Client.sendPlayerData(this.player.data);
       Client.sendArrowData(this.arrows);
       Client.fetchRoomData();
