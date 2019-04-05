@@ -11,7 +11,7 @@ var Arrow = {
           ySpeed: 0,
           rotation: 0,
           life: 0,
-          maxLife: 10000
+          maxLife: 25
         }
       }
       arrow.physics.body.allowRotation = false;
