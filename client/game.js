@@ -26,6 +26,7 @@ const game = new Phaser.Game({
 });
 //-----TEST PLAYER-----//
 let player;
+let initialized = false;
 var timer = 0;
 let showDebug = false; 
 let worldLayer; 
@@ -193,9 +194,10 @@ function update()
   */
   if(Client.roomData) {
 
-    if(!this.player) {
+    if(!this.player && !initialized) {
       Player.initialize(this);
       this.physics.add.collider(this.player.physics, worldLayer);
+      initialized = true;
     }
 
     timer++;
