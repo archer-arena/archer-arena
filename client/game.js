@@ -24,10 +24,13 @@ const game = new Phaser.Game({
     }
   }
 });
-//-----TEST PLAYER-----//
+
+
 let player;
 var timer = 0;
 let showDebug = false; 
+let score;
+let worldLayer;
 
 
 /*
@@ -63,11 +66,8 @@ function preload()
   this.load.image('map_layer3', 'assets/graphics/map/large_layer3.png');
   */
 
-  
-  this.load.image('ground', 'assets/graphics/map/tilemaps/snow/snow_on_stones.png');
-  this.load.image('trees', 'assets/graphics/map/tilemaps/snow/SnowyTrees.png');
-  this.load.image('rocks', 'assets/graphics/map/tilemaps/snow/cliff.png');
-  this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/snow_map.json');
+  this.load.image('tileset', 'assets/graphics/map/tilemaps/tiles_packed.png');
+  this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/test_map.json');
   
 
 
@@ -101,20 +101,12 @@ function create()
   */
 
   const map = this.make.tilemap({key: 'map'})
-  const tileset1 = map.addTilesetImage('snow_on_stones', 'ground');
-  const tileset2 = map.addTilesetImage('SnowyTrees', 'trees');
-  const tileset3 = map.addTilesetImage('cliff', 'rocks');
+  const tileset = map.addTilesetImage('tiles_packed', 'tileset');
 
-  const belowLayer = map.createStaticLayer('below', tileset1, 0, 0);
-  const worldLayer = map.createStaticLayer('world', tileset2, 0, 0);
-  const worldLayer2 = map.createStaticLayer('world', tileset3, 0, 0);
-  const aboveLayer = map.createStaticLayer('above', tileset2, 0, 0);
-
+  const belowLayer = map.createStaticLayer('ground', tileset, 0, 0);
+  worldLayer = map.createStaticLayer('wall', tileset, 0, 0);
 
   worldLayer.setCollisionByProperty({collides: true});
- //worldLayer2.setCollisionByProperty({collides: true});
-
-  aboveLayer.setDepth(10);
 
   //For Debug
  /*
@@ -125,13 +117,6 @@ function create()
   	faceColor: new Phaser.Display.Color(40, 39, 37, 255)
   });
  */
-  player = this.physics.add
-  	.sprite(0, 0, 'archer_blk', 'player-front')
-  	.setSize(30, 40)
-  	.setOffset(0, 24);
-
-  this.physics.add.collider(player, worldLayer);
-
 
   this.anims.create({
       key: 'right', //animation for the right direction of movement
@@ -162,6 +147,8 @@ function create()
   });
 
   Player.initialize(this);
+
+  this.physics.add.collider(this.player.physics, worldLayer);
   
   //Debug Graphics
   /*
@@ -180,8 +167,8 @@ function create()
   	});
   });
   */
-  Score.initialize(this);
-  Score.sortScore();
+  //Score.initialize(this);
+  //Score.sortScore();
 }
 
 /*
