@@ -18,6 +18,7 @@ var Client = {
     socket.on('joinedRoom', function(roomData) {
       console.log('You have joined room: ' + roomData.id);
       Client.roomData = roomData;
+      Client.fetchAllRooms(1);
     });
 
     socket.on('someoneJoined', function(roomData) {
@@ -32,7 +33,7 @@ var Client = {
     // Get rooms from server and store in lobby menu
     socket.on('obtainFetchedRooms', function(rooms) {
       console.log("client.js => we obtained fetch rooms");
-      Client.lobby = Client.lobby.concat(rooms);
+      Client.lobby = rooms;
       updateserverList();
     });
   },
@@ -52,7 +53,6 @@ var Client = {
   */
   createRoom: function(roominfo) {
     socket.emit('createRoom', roominfo);
-    console.log("we're in createRoom");      
   },
 
   /*
@@ -81,5 +81,12 @@ var Client = {
   fetchAllRooms: function (pageNum) {
     socket.emit('fetchAllRooms', pageNum);
   },
+  // for testing purposes. 
+  // this will delete the rooms created while testing if code works
+  // clicking the RED X icon next to JOIN ROOM button next to each room will delete the room
+  deleteRoom: function(roomKey) {
+    socket.emit('deleteRoom', roomKey);
+    this.fetchAllRooms(1);
+  }
 
 };

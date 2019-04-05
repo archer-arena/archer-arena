@@ -21,21 +21,19 @@ module.exports = {
     // TODO: Add options to room, placeholder for now
     server.io.sockets.adapter.rooms[roomId].arrows = {};
 
-    // TODO: Add options to room, placeholder for now
-    server.io.sockets.adapter.rooms[roomId].options = {
-      serverList: function(roominfo) {
-        let rooms = JSON.parse(null || "[]");
-        rooms.push(roominfo);
-        server.client.set("lobbysd", JSON.stringify(rooms));
-        socket.emit("obtainFetchedRooms", rooms);
-      },
-    };
+   // TODO: Add options to room, placeholder for now
+    // roominfo is passed in from interface.js => contains 
+    // all the room information to be displayed in the room list
+    server.io.sockets.adapter.rooms[roomId].options = roominfo;
+    // Holds the roomId for each room created to be accessed for the delete room function
+    server.io.sockets.adapter.rooms[roomId].options.KEY = roomId;
+    socket.emit("obtainFetchedRooms", [roominfo]);
+
     // TODO: Add password to room, placeholder for now
     server.io.sockets.adapter.rooms[roomId].password = {};
     
     const room = server.io.sockets.adapter.rooms[roomId];
     server.client.set(roomId, JSON.stringify(room), redis.print);
-    server.io.sockets.adapter.rooms[roomId].options.serverList(roominfo);
     socket.emit('joinedRoom', room);
   },
 
@@ -101,15 +99,36 @@ module.exports = {
         roomIndexEnd = data.length;
       }
 
-      let roomIds = data.slice(roomIndexStart, roomIndexEnd)
+      if (roomIndexStart > data.length) {
+        roomIndexStart = 0;
+      }
+
+      let roomIds = data.slice(roomIndexStart, roomIndexEnd);
+
       server.client.mget(roomIds, function (error, data) {
+        console.log("mget", data);
         let rooms = [];
-        data.forEach(roomData => {
-          parsedRoomData = JSON.parse(roomData);
-          rooms.push(parsedRoomData);
-        });
+        // this stops an error from occuring when mget is undefined
+        if (data) {
+          data.forEach(roomData => {
+            parsedRoomData = JSON.parse(roomData);
+            rooms.push(parsedRoomData.options);
+          });
+        }
         socket.emit('obtainFetchedRooms', rooms);
       });
+    });
+  },
+
+  deleteRoom: function (socket, davKey) {
+    server.client.exists(thisKey, function (err, reply) {
+      if (reply === 1) {
+        server.client.del(thisKey, function (err, reply) {
+        console.log("DELETED:", reply);
+        });
+      } else {
+        console.log('doesn\'t exist');
+      }
     });
   }
 }
