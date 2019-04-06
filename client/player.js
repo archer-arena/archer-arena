@@ -297,14 +297,21 @@ var Player = {
   },*/
 
   waitForRespawn(main) {
+    GUI.drawRespawnNotification();
+    main.player.text.destroy();
     setTimeout(function() {
-      console.log('Respawned');
       const respawnCoords = Player.getRespawnCoordinates();
-      main.player.physics.visible = true;
       main.player.physics.setPosition(respawnCoords.x, respawnCoords.y);
-      main.player.data.health = 1;
-      console.log(main.player.data.health);
+    }, 4500)
+
+    setTimeout(function() {
+      main.player.physics.visible = true;
+      main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 12);
     }, 5000)
+
+    setTimeout(function() {
+      main.player.data.health = 1;
+    }, 6000)
   },
 
   getRespawnCoordinates() {

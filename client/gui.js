@@ -12,6 +12,7 @@ class UI extends Phaser.Scene {
 
 var GUI = {
   deletingJoinFeed: false,
+  respawning: false,
   joinFeed: [],
   killFeed: [],
 
@@ -24,6 +25,10 @@ var GUI = {
         life: 0
       }
     )
+  },
+
+  drawRespawnNotification() {
+    GUI.respawning = true;
   },
 
   initialize: function(main) {
@@ -72,7 +77,7 @@ var GUI = {
     GUI.joinFeed.forEach(text => {
       length = GUI.joinFeed.length;
       if(text.object == null) {
-        text.object = main.add.bitmapText(config.gameOptions.scale.width - 500, (config.gameOptions.scale.height / 2) + (length * 16), 'pixel', text.text, 24);
+        text.object = main.add.bitmapText(config.gameOptions.scale.width - 350, (config.gameOptions.scale.height / 2) + (length * 16), 'pixel', text.text, 32);
       }
     });
 
@@ -82,6 +87,14 @@ var GUI = {
         var text = GUI.joinFeed.pop();
         text.object.destroy();
         GUI.deletingJoinFeed = false;
+      }, 5000);
+    }
+
+    if(GUI.respawning) {
+      GUI.respawning = false;
+      let test = main.add.bitmapText(config.gameOptions.scale.width/2, config.gameOptions.scale.height/2, 'pixel', "You Died.\n Waiting for respawn...", 36, 'center');
+      setTimeout(function() {
+        test.destroy();
       }, 5000);
     }
   }
