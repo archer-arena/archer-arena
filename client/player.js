@@ -10,6 +10,7 @@ var Player = {
     var player = {
       speed: 100,
       physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer_blk'),
+      text: main.add.text(initCoords.x, initCoords.y - 16, Client.playerData.name, {fontSize: 8}),
       data: {     
         x: initCoords.x,
         y: initCoords.y,
@@ -20,7 +21,8 @@ var Player = {
         health: 1       
       }
     }
-    
+    player.text.setOrigin(0.5);
+    /*
     var particles = main.add.particles('bounty_skull');
 
     /*var emitter = particles.createEmitter({
@@ -29,7 +31,7 @@ var Player = {
       speed: 200,
       alpha: 1,
       scale: 1
-    });*/
+    });
     var testTween = main.tweens.addCounter({
       from: -0.5,
       to: 1,
@@ -54,7 +56,7 @@ var Player = {
   //if (main.player.data.isFirst) {
     emitter.startFollow(player.physics);
   //}
-
+    */
     player.physics.anims.load('up');
     player.physics.anims.load('right');
     player.physics.anims.load('left');

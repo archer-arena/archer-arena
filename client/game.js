@@ -38,6 +38,7 @@ let forcedUpdate = false;
 */
 function preload()
 {
+
   //-----PLAYER-----//
   this.load.spritesheet('archer_blk', 'assets/graphics/player/player_black.png',
     { frameWidth: 15, frameHeight: 16 });
@@ -71,7 +72,6 @@ function preload()
   this.load.image('rocks', 'assets/graphics/map/tilemaps/snow/cliff.png');
   this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/snow_map.json');
   
-
 
   //-----UI-----//
   this.load.image('crosshair', 'assets/graphics/ui/crosshair.png');
@@ -199,6 +199,11 @@ function update()
       Player.initialize(this);
       this.physics.add.collider(this.player.physics, worldLayer);
       initialized = true;
+    }
+
+    if(this.player) {
+      this.player.text.x = this.player.physics.x;
+      this.player.text.y = this.player.physics.y - 16;
     }
 
     timer++;
