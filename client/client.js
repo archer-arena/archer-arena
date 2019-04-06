@@ -44,6 +44,10 @@ var Client = {
       Client.fetchRoomData();
       forcedUpdate = true;
     });
+
+    socket.on('kill', function(data) {
+      GUI.drawKillFeed(data.killer, data.killed);
+    });
   },
 
   initializePlayerData: function(guest = false) {

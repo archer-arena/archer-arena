@@ -222,10 +222,10 @@ var Player = {
 
   update(main) {
     main.player.data = {
+      name: Client.playerData.name,
       x: main.player.physics.x,
       y: main.player.physics.y,
       velocity: main.player.physics.body.velocity,
-      arrows: [],
       score: main.player.data.score,
       health: main.player.data.health
     }

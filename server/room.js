@@ -35,6 +35,8 @@ module.exports = {
   joinRoom: function (socket, roomId, playerData) {
     socket.join(roomId);
 
+    console.log(playerData);
+
     // Initializes the player who is joining the room [Placeholder as of now]
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
       name: playerData.name,
@@ -115,9 +117,12 @@ module.exports = {
   sendHitData: function(socket, shooter, roomId) {
     const room = server.io.sockets.adapter.rooms[roomId];
     room.sockets[socket.id].health--;
+    room.sockets[shooter].score++;
 
     // Set room message for killfeed
+    server.io.in(roomId).emit('kill', {killed: room.sockets[socket.id].name, killer: room.sockets[shooter].name});
     server.client.set(roomId, JSON.stringify(room));
+    this.broadcastForceUpdateData(socket, roomId);
   },
 
   fetchAllRooms: function(socket, pageNum) {

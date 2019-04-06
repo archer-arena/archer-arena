@@ -12,9 +12,20 @@ class UI extends Phaser.Scene {
 
 var GUI = {
   deletingJoinFeed: false,
+  deletingKillFeed: false,
   respawning: false,
   joinFeed: [],
   killFeed: [],
+
+  drawKillFeed(killer, killed) {
+    length = GUI.killFeed.length;
+    GUI.killFeed.push(
+      {
+        text: killer + ' KILLED ' + killed,
+        object: null
+      }
+    )
+  },
 
   drawSomeoneJoined(name) {
     length = GUI.joinFeed.length;
@@ -74,10 +85,11 @@ var GUI = {
   },
 
   update: function(main) {
+    // Join Feed
     GUI.joinFeed.forEach(text => {
       length = GUI.joinFeed.length;
       if(text.object == null) {
-        text.object = main.add.bitmapText(config.gameOptions.scale.width - 350, (config.gameOptions.scale.height / 2) + (length * 16), 'pixel', text.text, 32);
+        text.object = main.add.bitmapText(config.gameOptions.scale.width - 350, (config.gameOptions.scale.height / 2) + (length * 24), 'pixel', text.text, 32);
       }
     });
 
@@ -90,9 +102,26 @@ var GUI = {
       }, 5000);
     }
 
+    // Kill feed
+    GUI.killFeed.forEach(text => {
+      length = GUI.killFeed.length;
+      if(text.object == null) {
+        text.object = main.add.bitmapText(50, 25 + (length * 16), 'pixel', text.text, 32);
+      }
+    });
+
+    if(!GUI.deletingKillFeed && GUI.killFeed.length > 0) {
+      GUI.deletingKillFeed = true; 
+      setTimeout(function() {
+        var text = GUI.killFeed.pop();
+        text.object.destroy();
+        GUI.deletingKillFeed = false;
+      }, 5000);
+    }
+
     if(GUI.respawning) {
       GUI.respawning = false;
-      let test = main.add.bitmapText(config.gameOptions.scale.width/2, config.gameOptions.scale.height/2, 'pixel', "You Died.\n Waiting for respawn...", 36, 'center');
+      let test = main.add.bitmapText(config.gameOptions.scale.width/2 + 50, config.gameOptions.scale.height/2 - 50, 'pixel', "You Died.\n Waiting for respawn...", 48, 'center');
       setTimeout(function() {
         test.destroy();
       }, 5000);
