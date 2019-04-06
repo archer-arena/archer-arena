@@ -72,7 +72,7 @@ var GUI = {
     GUI.joinFeed.forEach(text => {
       length = GUI.joinFeed.length;
       if(text.object == null) {
-        text.object = main.add.text(config.gameOptions.scale.width - 500, (config.gameOptions.scale.height / 2) + (length * 16), text.text, {fontSize: 24});
+        text.object = main.add.bitmapText(config.gameOptions.scale.width - 500, (config.gameOptions.scale.height / 2) + (length * 16), 'pixel', text.text, 24);
       }
     });
 

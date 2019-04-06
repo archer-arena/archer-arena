@@ -10,7 +10,7 @@ var Player = {
     var player = {
       speed: 100,
       physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer_blk'),
-      text: main.add.text(initCoords.x, initCoords.y - 16, Client.playerData.name, {fontSize: 8}),
+      text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 12),
       data: {     
         x: initCoords.x,
         y: initCoords.y,

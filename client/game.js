@@ -66,11 +66,14 @@ function preload()
   this.load.image('map_layer3', 'assets/graphics/map/large_layer3.png');
   */
 
-  
+
   this.load.image('ground', 'assets/graphics/map/tilemaps/snow/snow_on_stones.png');
   this.load.image('trees', 'assets/graphics/map/tilemaps/snow/SnowyTrees.png');
   this.load.image('rocks', 'assets/graphics/map/tilemaps/snow/cliff.png');
   this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/snow_map.json');
+
+  //----FONT----//
+  this.load.bitmapFont('pixel', 'assets/fonts/pixel.png', 'assets/fonts/pixel.xml');
   
 
   //-----UI-----//
