@@ -37,6 +37,11 @@ var Client = {
       Client.lobby = Client.lobby.concat(rooms);
       updateserverList();
     });
+
+    socket.on('forceUpdateData', function() {
+      Client.fetchRoomData();
+      forcedUpdate = true;
+    });
   },
 
   initializePlayerData: function(guest = false) {
@@ -67,6 +72,14 @@ var Client = {
 
   joinOrCreateRandomRoom: function() {
 
+  },
+
+  /*
+    Broadcasts a forced update for all players in a room.
+    USAGE: When a players shoots an arrow, force all players to update to view the arrow.
+  */
+  broadcastForceUpdateData: function() {
+    socket.emit('broadcastForceUpdateData', Client.roomData.id);
   },
 
   /*

@@ -78,6 +78,7 @@ module.exports = {
       }
     }
     server.client.set(roomId, JSON.stringify(room));
+    this.broadcastForceUpdateData(socket, roomId);
   },
 
   // Fetches a room's data for any player requesting it.
@@ -88,6 +89,10 @@ module.exports = {
 
       socket.emit('obtainFetchedRoomData', JSON.parse(data));
     });
+  },
+
+  broadcastForceUpdateData: function(socket, roomId) {
+    socket.to(roomId).emit('forceUpdateData');
   },
 
   sendHitData: function(socket, shooter, roomId) {

@@ -30,6 +30,7 @@ let initialized = false;
 var timer = 0;
 let showDebug = false; 
 let worldLayer; 
+let forcedUpdate = false;
 
 /*
   Similiar to Unity's "Awake()" function
@@ -208,9 +209,17 @@ function update()
       Client.sendPlayerData(this.player.data);
       Client.sendArrowData(this.arrows);
       Client.fetchRoomData();
+      if(!forcedUpdate) {
+        Player.updateOtherPlayers(this, Client.roomData);
+        Arrow.updateOtherArrows(this, Client.roomData);
+      }
+      timer = 0;
+    }
+
+    if(forcedUpdate) {
       Player.updateOtherPlayers(this, Client.roomData);
       Arrow.updateOtherArrows(this, Client.roomData);
-      timer = 0;
+      forcedUpdate = false;
     }
   }
   //this.crosshair.body.velocity.x = this.player.body.velocity.x;

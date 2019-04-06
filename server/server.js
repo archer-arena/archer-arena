@@ -57,6 +57,10 @@ io.on('connection', function(socket) {
         room.joinRoom(socket, data.roomId, data.playerData);
     });
 
+    socket.on('broadcastForceUpdateData', function(roomId) {
+        room.broadcastForceUpdateData(socket, roomId);
+    });
+
     socket.on('updatePlayerData', function(data) {
         room.updatePlayerData(socket, data.roomId, data.player);
         // console.log('Updating player Data');

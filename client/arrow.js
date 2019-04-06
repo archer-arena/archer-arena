@@ -30,6 +30,7 @@ var Arrow = {
       arrow.physics.rotation = Phaser.Math.Angle.Between(shooter.x, shooter.y, target.x, target.y);
       arrow.data.rotation = arrow.physics.rotation;
       main.arrows[arrow.data.key] = arrow;
+      Client.sendArrowData(main.arrows);
     },
 
     update: function (main) {
