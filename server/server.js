@@ -66,6 +66,10 @@ io.on('connection', function(socket) {
         room.joinRoom(socket, data.roomId, data.playerData);
     });
 
+    socket.on('joinOrCreateRandomRoom', function(data) {
+        room.joinOrCreateRandomRoom(socket, data);
+    });
+
     socket.on('broadcastForceUpdateData', function(roomId) {
         room.broadcastForceUpdateData(socket, roomId);
     });

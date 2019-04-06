@@ -73,7 +73,8 @@ var Client = {
   },
 
   joinOrCreateRandomRoom: function() {
-
+    console.log('Joining/Creating a random room');
+    socket.emit('joinOrCreateRandomRoom', Client.playerData);
   },
 
   /*

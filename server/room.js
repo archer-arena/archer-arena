@@ -23,20 +23,12 @@ module.exports = {
     server.io.sockets.adapter.rooms[roomId].arrows = {};
 
     // TODO: Add options to room, placeholder for now
-    server.io.sockets.adapter.rooms[roomId].options = {
-      serverList: function(roominfo) {
-        let rooms = JSON.parse(null || "[]");
-        rooms.push(roominfo);
-        server.client.set("lobbysd", JSON.stringify(rooms));
-        socket.emit("obtainFetchedRooms", rooms);
-      },
-    };
+    server.io.sockets.adapter.rooms[roomId].options = roominfo;
     // TODO: Add password to room, placeholder for now
     server.io.sockets.adapter.rooms[roomId].password = {};
     
     const room = server.io.sockets.adapter.rooms[roomId];
     server.client.set(roomId, JSON.stringify(room), redis.print);
-    server.io.sockets.adapter.rooms[roomId].options.serverList(roominfo);
     socket.emit('joinedRoom', room);
   },
 
@@ -56,6 +48,20 @@ module.exports = {
     server.client.set(roomId, JSON.stringify(room), redis.print);
     socket.emit('joinedRoom', room);
     socket.to(roomId).emit('someoneJoined', playerData.name);
+  },
+
+  joinOrCreateRandomRoom: function(socket, data) {
+    const self = this;
+    server.client.dbsize(function(err, size) {
+      if(size == 0) {
+          self.createRoom(socket, {}, data);
+        } else {
+          const self_ = self;
+          server.client.randomkey(function(err, key) {
+            self_.joinRoom(socket, key, data);
+          });
+        }
+      });
   },
 
   // Updates a single player's data inside of a room
