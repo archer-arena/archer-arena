@@ -81,6 +81,17 @@ module.exports = {
     this.broadcastForceUpdateData(socket, roomId);
   },
 
+  leaveRoom: function(socket, roomId) {
+    const room = server.io.sockets.adapter.rooms[roomId];
+    delete room.sockets[socket.id];
+
+    if(Object.keys(room.sockets).length == 0) {
+      server.client.del(roomId);
+    } else {
+      server.client.set(roomId, JSON.stringify(room));
+    }
+  },
+
   // Fetches a room's data for any player requesting it.
   fetchRoomData: function (socket, roomId) {
     server.client.get(roomId, function (error, data) {

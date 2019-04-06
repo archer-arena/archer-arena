@@ -48,6 +48,15 @@ io.on('connection', function(socket) {
         console.log(socket.id);
     });
 
+    socket.on('disconnecting', function() {
+        console.log(socket.id + ' is disconnecting');
+        for(key in socket.rooms) {
+            if(key != socket.id) {
+                room.leaveRoom(socket, key);
+            }
+        }
+    });
+
     socket.on('createRoom', function(data) {
         console.log(socket.id + ' is creating a room');
         room.createRoom(socket, data.roominfo, data.playerData);
