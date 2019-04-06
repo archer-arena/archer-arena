@@ -18,6 +18,7 @@ var Client = {
   */
   initializeConnection: function() {
     console.log('Initializing WebSocket Connection')
+    Client.initializePlayerData(true);
     socket.on('joinedRoom', function(roomData) {
       console.log('You have joined room: ' + roomData.id);
       Client.roomData = roomData;
@@ -25,6 +26,7 @@ var Client = {
 
     socket.on('someoneJoined', function(playerName) {
       console.log(playerName + ' has joined your room');
+      GUI.drawSomeoneJoined(playerName)
     });
 
     socket.on('obtainFetchedRoomData', function(roomData) {
@@ -46,7 +48,7 @@ var Client = {
 
   initializePlayerData: function(guest = false) {
     if(guest) {
-      this.playerData.name = 'Guest' + Math.floor(100000 + Math.random() * 900000);
+      Client.playerData.name = 'Guest' + Math.floor(100000 + Math.random() * 900000);
     } else {
       // Obtain LocalStorage data for player information;
     }

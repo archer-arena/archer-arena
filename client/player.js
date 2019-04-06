@@ -5,13 +5,14 @@ var Player = {
   */
   initialize: function(main) {
     var crosshair = main.physics.add.sprite(480, 480, 'crosshair');
+    var initCoords = Player.getRespawnCoordinates();
     crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
-      physics: main.physics.add.sprite(480, 480, 'archer_blk'),
+      physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer_blk'),
       data: {     
-        x: 0,
-        y: 0,
+        x: initCoords.x,
+        y: initCoords.y,
         velocity: {x: 0, y: 0},
         arrows: [],
         score: 0,

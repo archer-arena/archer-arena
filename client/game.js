@@ -9,7 +9,7 @@ const game = new Phaser.Game({
     }
   },
   pixelArt: true,
-  scene: {
+  scene: [{
     preload: preload,
     create: create,
     update: update,
@@ -22,7 +22,7 @@ const game = new Phaser.Game({
       crosshair: null,
       otherArrowsCollisionGroup: null
     }
-  }
+  }, UI]
 });
 //-----TEST PLAYER-----//
 let player;
