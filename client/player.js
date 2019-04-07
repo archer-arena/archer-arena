@@ -1,3 +1,4 @@
+let disableControl = false;
 var Player = {
   /*
     Initializes player, called only ONCE after the player joins a server
@@ -88,7 +89,8 @@ var Player = {
     Phaser.Input.Mouse.MouseManager.capture = true;
 
     main.input.on('pointerdown', function () {
-      Arrow.initialize(main, player.physics, crosshair);
+      if(!disableControl) 
+        Arrow.initialize(main, player.physics, crosshair);
     })
 
     /*
@@ -111,68 +113,84 @@ var Player = {
       Input event listeners WASD for movement on 'keydown'
     */
     main.input.keyboard.on('keydown_W', function(event) {
-      player.physics.setVelocityY(-player.speed)
-      player.physics.anims.play('up');
+      if(!disableControl) {
+        player.physics.setVelocityY(-player.speed)
+        player.physics.anims.play('up');
+      }
     });
     main.input.keyboard.on('keydown_A', function(event) {
-      player.physics.setVelocityX(-player.speed)
-      player.physics.anims.play('left');
+      if(!disableControl) {
+        player.physics.setVelocityX(-player.speed)
+        player.physics.anims.play('left');
+      }
     });
     main.input.keyboard.on('keydown_S', function(event) {
-      player.physics.setVelocityY(player.speed)
-      player.physics.anims.play('down');
+      if(!disableControl) {
+        player.physics.setVelocityY(player.speed)
+        player.physics.anims.play('down');
+      }
     });
     main.input.keyboard.on('keydown_D', function(event) {
-      player.physics.setVelocityX(player.speed)
-      player.physics.anims.play('right');
+      if(!disableControl) {
+        player.physics.setVelocityX(player.speed)
+        player.physics.anims.play('right');
+      }
     });
 
     /*
       Input event listeners WASD for movement on 'keyup'
     */
     main.input.keyboard.on('keyup_W', function (event) {
-      if (moveKeys['down'].isUp)
-        player.physics.setVelocityY(0)
-      else {
-        player.physics.setVelocityY(player.speed)
-        player.physics.anims.play('down');
-      }
+      if(!disableControl) {
+        if (moveKeys['down'].isUp)
+          player.physics.setVelocityY(0)
+        else {
+          player.physics.setVelocityY(player.speed)
+          player.physics.anims.play('down');
+        }
 
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
+        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+          player.physics.anims.stop(); 
+      }
     });
     main.input.keyboard.on('keyup_S', function (event) {
-      if (moveKeys['up'].isUp)
-        player.physics.setVelocityY(0)
-      else {
-        player.physics.setVelocityY(-player.speed)
-        player.physics.anims.play('up');
-      }
+      if(!disableControl) {
+        if (moveKeys['up'].isUp)
+          player.physics.setVelocityY(0)
+        else {
+          player.physics.setVelocityY(-player.speed)
+          player.physics.anims.play('up');
+        }
 
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
+        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+          player.physics.anims.stop(); 
+      }
     });
     main.input.keyboard.on('keyup_A', function (event) {
-      if (moveKeys['right'].isUp)
-        player.physics.setVelocityX(0)
-      else {
-        player.physics.setVelocityX(player.speed)
-        player.physics.anims.play('right');
-      }
+      if(!disableControl) {
+        if (moveKeys['right'].isUp)
+          player.physics.setVelocityX(0)
+        else {
+          player.physics.setVelocityX(player.speed)
+          player.physics.anims.play('right');
+        }
 
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
+        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+          player.physics.anims.stop(); 
+      }
     });
     main.input.keyboard.on('keyup_D', function (event) {
-      if (moveKeys['left'].isUp)
-        player.physics.setVelocityX(0)
-      else {
-        player.physics.setVelocityX(-player.speed)
-        player.physics.anims.play('left');
-      }
+      if(!disableControl) {
+        if (moveKeys['left'].isUp)
+          player.physics.setVelocityX(0)
+        else {
+          player.physics.setVelocityX(-player.speed)
+          player.physics.anims.play('left');
+        }
 
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
+        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+          player.physics.anims.stop(); 
+      }
     });
 
     /*
@@ -297,6 +315,7 @@ var Player = {
   },*/
 
   waitForRespawn(main) {
+    disableControl = true;
     GUI.drawRespawnNotification();
     main.player.text.destroy();
     setTimeout(function() {
@@ -311,6 +330,7 @@ var Player = {
 
     setTimeout(function() {
       main.player.data.health = 1;
+      disableControl = false;
     }, 6000)
   },
 
