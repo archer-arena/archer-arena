@@ -1,4 +1,5 @@
 // Server-related functions will go here
+var dotenv = require('dotenv').config();
 var express = require('express');
 var http = require('http');
 var path = require('path');
@@ -9,7 +10,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var server = http.Server(app);
 var io = socket(server);
-var client = redis.createClient();
+var client = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
 module.exports = {client: client, io: io};
 
 var room = require('./room');
@@ -47,21 +48,35 @@ io.on('connection', function(socket) {
         console.log(socket.id);
     });
 
-    socket.on('createRoom', function(roominfo) {
-        console.log(socket.id + ' is creating a room');
-        room.createRoom(socket, roominfo);
+    socket.on('disconnecting', function() {
+        console.log(socket.id + ' is disconnecting');
+        for(key in socket.rooms) {
+            if(key != socket.id) {
+                room.leaveRoom(socket, key);
+            }
+        }
     });
 
-    socket.on('joinRoom', function(roomId) {
-        room.joinRoom(socket, roomId);
+    socket.on('createRoom', function(data) {
+        console.log(socket.id + ' is creating a room');
+        room.createRoom(socket, data.roominfo, data.playerData);
+    });
+
+    socket.on('joinRoom', function(data) {
+        room.joinRoom(socket, data.roomId, data.playerData);
+    });
+
+    socket.on('joinOrCreateRandomRoom', function(data) {
+        room.joinOrCreateRandomRoom(socket, data);
+    });
+
+    socket.on('broadcastForceUpdateData', function(roomId) {
+        room.broadcastForceUpdateData(socket, roomId);
     });
 
     socket.on('updatePlayerData', function(data) {
-        console.log('Updating player Data');
-
         room.updatePlayerData(socket, data.roomId, data.player);
         // console.log('Updating player Data');
-
     });
 
     socket.on('updateArrowData', function(data) { 
