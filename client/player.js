@@ -9,7 +9,7 @@ var Player = {
     crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
-      physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer_blk'),
+      physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer'),
       text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 12),
       data: {     
         x: initCoords.x,
@@ -237,7 +237,7 @@ var Player = {
       if(socket.id != key) {
         // If the roomData does not have a object for a player, create one
         if(!(key in main.otherPlayers)) {
-          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
+          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer');
           main.otherPlayers[key].anims.load('up');
           main.otherPlayers[key].anims.load('right');
           main.otherPlayers[key].anims.load('left');

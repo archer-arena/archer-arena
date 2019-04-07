@@ -40,6 +40,8 @@ function preload()
 {
 
   //-----PLAYER-----//
+  this.load.spritesheet('archer', 'assets/graphics/player/player.png',
+  { frameWidth: 16, frameHeight: 16 });
   this.load.spritesheet('archer_blk', 'assets/graphics/player/player_black.png',
     { frameWidth: 15, frameHeight: 16 });
   this.load.spritesheet('archer_blu', 'assets/graphics/player/player_blue.png',
@@ -134,28 +136,28 @@ function create()
 
   this.anims.create({
       key: 'right', //animation for the right direction of movement
-      frames: this.anims.generateFrameNumbers('archer_blk', { start: 0, end: 2}), //utilize the first 3 images of the spritesheet
+      frames: this.anims.generateFrameNumbers('archer', { start: 0, end: 2}), //utilize the first 3 images of the spritesheet
       frameRate: 10, //run this animation at the rate of 10 frames per second
       repeat: -1, //-1 = loop animation
   });
 
   this.anims.create({
       key: 'left', //animation for the right direction of movement
-      frames: this.anims.generateFrameNumbers('archer_blk', { start: 3, end: 5}), //utilize the first 3 images of the spritesheet
+      frames: this.anims.generateFrameNumbers('archer', { start: 3, end: 5}), //utilize the first 3 images of the spritesheet
       frameRate: 10, //run this animation at the rate of 10 frames per second
       repeat: -1, //-1 = loop animation
   });
 
   this.anims.create({
       key: 'down', //animation for the right direction of movement
-      frames: this.anims.generateFrameNumbers('archer_blk', { start: 6, end: 8}), //utilize the first 3 images of the spritesheet
+      frames: this.anims.generateFrameNumbers('archer', { start: 6, end: 8}), //utilize the first 3 images of the spritesheet
       frameRate: 10, //run this animation at the rate of 10 frames per second
       repeat: -1, //-1 = loop animation
   });
 
   this.anims.create({
       key: 'up', //animation for the right direction of movement
-      frames: this.anims.generateFrameNumbers('archer_blk', { start: 9, end: 11}), //utilize the first 3 images of the spritesheet
+      frames: this.anims.generateFrameNumbers('archer', { start: 9, end: 11}), //utilize the first 3 images of the spritesheet
       frameRate: 10, //run this animation at the rate of 10 frames per second
       repeat: -1, //-1 = loop animation
   });
