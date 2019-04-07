@@ -5,8 +5,8 @@ var Player = {
     - Input, Graphics, Draw
   */
   initialize: function(main) {
-    var crosshair = main.physics.add.sprite(480, 480, 'crosshair');
     var initCoords = Player.getRespawnCoordinates();
+    var crosshair = main.physics.add.sprite(initCoords.x, initCoords.y, 'crosshair');
     crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
@@ -97,7 +97,7 @@ var Player = {
       enable camera
     */
     main.cameras.main.setZoom(4);
-    main.cameras.main.startFollow(player.physics, true, 0.1, 0.1);
+    main.cameras.main.startFollow(player.physics, false, 1, 1);
 
     /* 
       Initializes movements key bindings based on configurations
@@ -212,31 +212,14 @@ var Player = {
     main.input.on('pointermove', function (pointer) {
       if (main.input.mouse.locked)
       {
-          crosshair.x += pointer.movementX;
-          crosshair.y += pointer.movementY;
+        crosshair.x += pointer.movementX;
+        crosshair.y += pointer.movementY;
       }
     }, main);
 
     main.player = player;
     main.crosshair = crosshair;
-
   },
-
-      // Crosshair cannot move offscreen
-      constrainCrosshair: function(crosshair, player) {
-        var distX = crosshair.x-player.x;
-        var distY = crosshair.x-player.y;
-  
-        if (distX > config.gameOptions.width)
-          crosshair.x = player.x+config.gameOptions.width;
-        else if (distX < -config.gameOptions.width)
-          crosshair.x = player.x-config.gameOptions.width;
-        
-        if (distY > config.gameOptions.height)
-          crosshair.y = player.y+config.gameOptions.height;
-        else if (distY < -config.gameOptions.height)
-          crosshair.y = player.y-config.gameOptions.height;
-      },
 
   update(main) {
     main.player.data = {
@@ -284,10 +267,10 @@ var Player = {
           }
 
           if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
-            main.physics.moveTo(main.otherPlayers[key], predictedPosition.x, predictedPosition.y, 100, 1000);
+            main.physics.moveTo(main.otherPlayers[key], predictedPosition.x, predictedPosition.y, 105, 700);
           } else {
             if(Phaser.Math.Distance.Between(main.otherPlayers[key].x, main.otherPlayers[key].y, roomData.sockets[key].x, roomData.sockets[key].y) > 10) {
-              main.physics.moveTo(main.otherPlayers[key], roomData.sockets[key].x, roomData.sockets[key].y, 100, 1000);
+              main.physics.moveTo(main.otherPlayers[key], roomData.sockets[key].x, roomData.sockets[key].y, 105, 700);
             } else {
               main.otherPlayers[key].setVelocity(0, 0);
             }
@@ -326,12 +309,12 @@ var Player = {
     setTimeout(function() {
       main.player.physics.visible = true;
       main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 12);
-    }, 5000)
+    }, 5250)
 
     setTimeout(function() {
       main.player.data.health = 1;
       disableControl = false;
-    }, 6000)
+    }, 5500)
   },
 
   getRespawnCoordinates() {
