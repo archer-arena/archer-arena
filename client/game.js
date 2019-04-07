@@ -63,12 +63,6 @@ function preload()
   this.load.image('test_shape', 'assets/graphics/player/test_shape.png');
 
   //-----MAP-----//
-  /* --OLD MAP--
-  this.load.image('map_base', 'assets/graphics/map/map_base.png');
-  this.load.image('map_layer1', 'assets/graphics/map/large_layer1.png');
-  this.load.image('map_layer2', 'assets/graphics/map/large_layer2.png');
-  this.load.image('map_layer3', 'assets/graphics/map/large_layer3.png');
-  */
 
   this.load.image('tileset', 'assets/graphics/map/tilemaps/tiles_packed.png');
   this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/test_map.json');
@@ -108,14 +102,13 @@ function create()
 
   const map = this.make.tilemap({key: 'map'})
   const tileset = map.addTilesetImage('tiles_packed', 'tileset');
-  const tileset1 = map.addTilesetImage('snow_on_stones', 'ground');
-  const tileset2 = map.addTilesetImage('SnowyTrees', 'trees');
-  const tileset3 = map.addTilesetImage('cliff', 'rocks');
 
   const belowLayer = map.createStaticLayer('ground', tileset, 0, 0);
   worldLayer = map.createStaticLayer('wall', tileset, 0, 0);
+  const aboveLayer = map.createStaticLayer('above', tileset, 0, 0);
 
   worldLayer.setCollisionByProperty({collides: true});
+  aboveLayer.setDepth(10);
 
   //For Debug
  /*
