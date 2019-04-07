@@ -81,6 +81,7 @@ function preload()
 
   //-----UI-----//
   this.load.image('crosshair', 'assets/graphics/ui/crosshair.png');
+  this.load.image('reloading', 'assets/graphics/ui/reloading.png');
   this.load.image('button', 'assets/graphics/ui/button.png');
   this.load.image('button_toggle', 'assets/graphics/ui/button_toggle.png');
   this.load.image('controls', 'assets/graphics/ui/controls.png');
@@ -204,6 +205,7 @@ function update()
     if(this.player) {
       this.player.text.x = this.player.physics.x;
       this.player.text.y = this.player.physics.y - 16;
+      this.crosshair.body.velocity = this.player.physics.body.velocity;
     }
 
     timer++;

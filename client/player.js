@@ -1,4 +1,5 @@
 let disableControl = false;
+let canShoot = true;
 var Player = {
   /*
     Initializes player, called only ONCE after the player joins a server
@@ -89,8 +90,10 @@ var Player = {
     Phaser.Input.Mouse.MouseManager.capture = true;
 
     main.input.on('pointerdown', function () {
-      if(!disableControl) 
+      if(!disableControl && canShoot) { 
         Arrow.initialize(main, player.physics, crosshair);
+        Player.refreshShotTimer(main);
+      }
     })
 
     /*
@@ -286,6 +289,15 @@ var Player = {
         delete main.otherPlayers[key];
       }
     }
+  },
+
+  refreshShotTimer(main) {
+    canShoot = false;
+    main.crosshair.setTexture('reloading');
+    setTimeout(function() {
+      canShoot = true;
+      main.crosshair.setTexture('crosshair');
+    }, 2000);
   },
 
   /*highlightFirst (main) {
