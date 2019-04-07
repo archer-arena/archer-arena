@@ -27,8 +27,8 @@ var config =
   },
 
   mapOptions: {
-    width: 480,
-    height: 480,
+    width: 600,
+    height: 600,
     type: null // Map type... Desert/Snow/etc?
   }
 };

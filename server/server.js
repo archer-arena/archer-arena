@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var app = express();
 var server = http.Server(app);
 var io = socket(server);
-var client = redis.createClient();
+var client = redis.createClient(process.env.REDIS_URL, {no_ready_check: true});
 module.exports = {client: client, io: io};
 
 var room = require('./room');
@@ -84,7 +84,7 @@ io.on('connection', function(socket) {
     })
 
     socket.on('sendHitData', function(data) {
-        room.sendHitData(socket, data.shooter, data.roomId);
+        room.sendHitData(socket, data.arrow, data.shooter, data.roomId);
     });
 
     socket.on('fetchRoomData', function(roomId) {

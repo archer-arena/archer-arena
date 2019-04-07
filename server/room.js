@@ -114,15 +114,16 @@ module.exports = {
     socket.to(roomId).emit('forceUpdateData');
   },
 
-  sendHitData: function(socket, shooter, roomId) {
+  sendHitData: function(socket, arrow, shooter, roomId) {
+    const self = this;
     const room = server.io.sockets.adapter.rooms[roomId];
-    room.sockets[socket.id].health--;
-    room.sockets[shooter].score++;
 
     // Set room message for killfeed
     server.io.in(roomId).emit('kill', {killed: room.sockets[socket.id].name, killer: room.sockets[shooter].name});
-    server.client.set(roomId, JSON.stringify(room));
-    this.broadcastForceUpdateData(socket, roomId);
+    server.io.to(`${shooter}`).emit('gainScoreDestroyArrow', arrow);
+    server.client.set(roomId, JSON.stringify(room), function(err, reply) {
+      self.broadcastForceUpdateData(socket, roomId);
+    });
   },
 
   fetchAllRooms: function(socket, pageNum) {

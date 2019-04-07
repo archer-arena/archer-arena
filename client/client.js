@@ -48,6 +48,11 @@ var Client = {
     socket.on('kill', function(data) {
       GUI.drawKillFeed(data.killer, data.killed);
     });
+
+    socket.on('gainScoreDestroyArrow', function(key) {
+      arrowKey = key;
+      score = true;
+    });
   },
 
   initializePlayerData: function(guest = false) {
@@ -101,8 +106,8 @@ var Client = {
     socket.emit('updateArrowData', {roomId: Client.roomData.id, arrows: arrows});
   },
 
-  sendHitData: function(shooter) {
-    socket.emit('sendHitData', {shooter: shooter, roomId: Client.roomData.id});
+  sendHitData: function(shooter, arrowKey) {
+    socket.emit('sendHitData', {arrow: arrowKey, shooter: shooter, roomId: Client.roomData.id});
   },
 
   /*

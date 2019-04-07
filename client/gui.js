@@ -5,6 +5,17 @@ class UI extends Phaser.Scene {
     super({ key: 'UIScene', active: true });
   }
 
+  preload() {
+    this.load.image('leaderboard', 'assets/graphics/ui/leaderboard.png');
+  }
+
+  create() {
+    let leaderboard = this.physics.add.sprite(config.gameOptions.scale.width - 150, 275, 'leaderboard')
+    leaderboard.setOrigin(0.5);
+    leaderboard.displayWidth = 300;
+    leaderboard.displayHeight = 550;
+  }
+
   update() {
     GUI.update(this);
   }
@@ -16,6 +27,7 @@ var GUI = {
   respawning: false,
   joinFeed: [],
   killFeed: [],
+  leaderboardFeed: [],
 
   drawKillFeed(killer, killed) {
     length = GUI.killFeed.length;
@@ -42,49 +54,35 @@ var GUI = {
     GUI.respawning = true;
   },
 
-  initialize: function(main) {
-    var leaderboard = {
-      you: main.player,
-      players: main.otherPlayers,
-      scoreArr: {}
+  updateLeaderboard: function(main) {
+    GUI.leaderboardFeed.forEach(feed => {
+      if(feed.textObject != null) {
+        feed.textObject.destroy();
+      }
+    });
+    GUI.leaderboardFeed = [];
+
+    for(key in Client.roomData.sockets) {
+      GUI.leaderboardFeed.push({
+        id: key,
+        name: Client.roomData.sockets[key].name,
+        score: Client.roomData.sockets[key].score,
+        textObject: null
+      });
     }
 
-    
-    //scoreArr = leaderboard.you.data.push(leaderboard.players);
-  },
-
-  //edit to pass in array of scores with ids
-  sortScore: function() {
-    var testData = [
-      {
-        id: "one",
-        score: 4,
-        isFirst: false
-      },
-      {
-        id: "two",
-        score: 7,
-        isFirst: false
-      },
-      {
-        id: "three",
-        score: 10,
-        isFirst: false
-      },
-      {
-        id: "four",
-        score: 0,
-        isFirst: false
-      }
-    ]
-    testData.sort(function(a, b){return b.score - a.score});
-    testData[0].isFirst = true;
-
-    /*scoreArr.sort(function(a, b){return b - a});
-    scoreArr[0].main.player.data.isFirst = true;*/
+    GUI.leaderboardFeed.sort(function(a, b){return b.score - a.score});
+    for(var i = 0; i < GUI.leaderboardFeed.length; i++) {
+      if(i < 10)
+        GUI.leaderboardFeed[i].textObject = main.add.bitmapText(config.gameOptions.scale.width - 250, 10 + (i * 42), 'pixel', GUI.leaderboardFeed[i].name + ' - ' + GUI.leaderboardFeed[i].score, 42, 'center');
+      else
+        break;
+    }
   },
 
   update: function(main) {
+    if(Client.roomData)
+      GUI.updateLeaderboard(main);
     // Join Feed
     GUI.joinFeed.forEach(text => {
       length = GUI.joinFeed.length;

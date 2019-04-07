@@ -30,9 +30,11 @@ let player;
 let initialized = false;
 var timer = 0;
 let showDebug = false; 
-let score;
+let score = false;
+let arrowKey = '';
 let worldLayer; 
 let forcedUpdate = false;
+
 
 /*
   Similiar to Unity's "Awake()" function
@@ -223,6 +225,13 @@ function update()
       Player.updateOtherPlayers(this, Client.roomData);
       Arrow.updateOtherArrows(this, Client.roomData);
       forcedUpdate = false;
+    }
+
+    if(score) {
+      this.player.data.score++;
+      this.arrows[arrowKey].data.life = 100;
+      this.arrows[arrowKey].physics.destroy();
+      score = false;
     }
   }
   //this.crosshair.body.velocity.x = this.player.body.velocity.x;
