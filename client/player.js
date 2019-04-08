@@ -270,10 +270,10 @@ var Player = {
           }
 
           if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
-            main.physics.moveTo(main.otherPlayers[key], predictedPosition.x, predictedPosition.y, 105, 700);
+            main.physics.moveTo(main.otherPlayers[key], predictedPosition.x, predictedPosition.y, 100, 1000);
           } else {
             if(Phaser.Math.Distance.Between(main.otherPlayers[key].x, main.otherPlayers[key].y, roomData.sockets[key].x, roomData.sockets[key].y) > 10) {
-              main.physics.moveTo(main.otherPlayers[key], roomData.sockets[key].x, roomData.sockets[key].y, 105, 700);
+              main.physics.moveTo(main.otherPlayers[key], roomData.sockets[key].x, roomData.sockets[key].y, 100, 1000);
             } else {
               main.otherPlayers[key].setVelocity(0, 0);
             }
