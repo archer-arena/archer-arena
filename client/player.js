@@ -5,13 +5,15 @@ var Player = {
   */
   initialize: function(main) {
     var crosshair = main.physics.add.sprite(480, 480, 'crosshair');
+    var initCoords = Player.getRespawnCoordinates();
     crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
-      physics: main.physics.add.sprite(480, 480, 'archer_blk'),
+      physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer'),
+      text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 12),
       data: {     
-        x: 0,
-        y: 0,
+        x: initCoords.x,
+        y: initCoords.y,
         velocity: {x: 0, y: 0},
         arrows: [],
         score: 0,
@@ -19,7 +21,8 @@ var Player = {
         health: 1       
       }
     }
-    
+    player.text.setOrigin(0.5);
+    /*
     var particles = main.add.particles('bounty_skull');
 
     /*var emitter = particles.createEmitter({
@@ -28,7 +31,7 @@ var Player = {
       speed: 200,
       alpha: 1,
       scale: 1
-    });*/
+    });
     var testTween = main.tweens.addCounter({
       from: -0.5,
       to: 1,
@@ -53,7 +56,7 @@ var Player = {
   //if (main.player.data.isFirst) {
     emitter.startFollow(player.physics);
   //}
-
+    */
     player.physics.anims.load('up');
     player.physics.anims.load('right');
     player.physics.anims.load('left');
@@ -219,10 +222,10 @@ var Player = {
 
   update(main) {
     main.player.data = {
+      name: Client.playerData.name,
       x: main.player.physics.x,
       y: main.player.physics.y,
       velocity: main.player.physics.body.velocity,
-      arrows: [],
       score: main.player.data.score,
       health: main.player.data.health
     }
@@ -234,7 +237,11 @@ var Player = {
       if(socket.id != key) {
         // If the roomData does not have a object for a player, create one
         if(!(key in main.otherPlayers)) {
-          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
+          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer');
+          main.otherPlayers[key].anims.load('up');
+          main.otherPlayers[key].anims.load('right');
+          main.otherPlayers[key].anims.load('left');
+          main.otherPlayers[key].anims.load('down');
         } else {
           let predictedPosition = {x: 0, y: 0};
           predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
@@ -244,6 +251,18 @@ var Player = {
             main.otherPlayers[key].visible = false;
           } else {
             main.otherPlayers[key].visible = true;
+          }
+
+          if(roomData.sockets[key].velocity.x > 0) {
+            main.otherPlayers[key].anims.play('right');
+          } else if(roomData.sockets[key].velocity.x < 0) {
+            main.otherPlayers[key].anims.play('left');
+          } else if(roomData.sockets[key].velocity.y > 0) {
+            main.otherPlayers[key].anims.play('up');
+          } else if(roomData.sockets[key].velocity.y < 0) {
+            main.otherPlayers[key].anims.play('down');
+          } else {
+            main.otherPlayers[key].anims.stop();
           }
 
           if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
@@ -278,14 +297,21 @@ var Player = {
   },*/
 
   waitForRespawn(main) {
+    GUI.drawRespawnNotification();
+    main.player.text.destroy();
     setTimeout(function() {
-      console.log('Respawned');
       const respawnCoords = Player.getRespawnCoordinates();
-      main.player.physics.visible = true;
       main.player.physics.setPosition(respawnCoords.x, respawnCoords.y);
-      main.player.data.health = 1;
-      console.log(main.player.data.health);
+    }, 4500)
+
+    setTimeout(function() {
+      main.player.physics.visible = true;
+      main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 12);
     }, 5000)
+
+    setTimeout(function() {
+      main.player.data.health = 1;
+    }, 6000)
   },
 
   getRespawnCoordinates() {

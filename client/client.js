@@ -8,13 +8,17 @@ const socket = io();
 
 var Client = {
   roomData: null,
+  playerData: {
+    name: ''
+  },
   lobby: [],
   /*
     Call this in Preload(), this will connect the client (user) to...
     the server and will obtain updates from the server if needed
   */
   initializeConnection: function() {
-    console.log('Initializing WebSocket Connection');
+    console.log('Initializing WebSocket Connection')
+    Client.initializePlayerData(true);
     // will fetch all rooms available as soon as the lobby page is accessed.
     Client.fetchAllRooms(1);
 
@@ -24,9 +28,9 @@ var Client = {
       Client.roomData = roomData;
     });
 
-    socket.on('someoneJoined', function(roomData) {
-      console.log('Someone has joined your room');
-      Client.roomData = roomData;
+    socket.on('someoneJoined', function(playerName) {
+      console.log(playerName + ' has joined your room');
+      GUI.drawSomeoneJoined(playerName)
     });
 
     socket.on('obtainFetchedRoomData', function(roomData) {
@@ -38,6 +42,23 @@ var Client = {
       Client.lobby = rooms;
       updateserverList();
     });
+
+    socket.on('forceUpdateData', function() {
+      Client.fetchRoomData();
+      forcedUpdate = true;
+    });
+
+    socket.on('kill', function(data) {
+      GUI.drawKillFeed(data.killer, data.killed);
+    });
+  },
+
+  initializePlayerData: function(guest = false) {
+    if(guest) {
+      Client.playerData.name = 'Guest' + Math.floor(100000 + Math.random() * 900000);
+    } else {
+      // Obtain LocalStorage data for player information;
+    }
   },
 
   /*
@@ -45,7 +66,7 @@ var Client = {
     Call on interface, clicked on "Join Room".
   */
   joinRoom: function(roomId) {
-    socket.emit('joinRoom', roomId);
+    socket.emit('joinRoom', {roomId: roomId, playerData: Client.playerData});
   },
   
   /*
@@ -54,8 +75,20 @@ var Client = {
     Call on interface, clicked on "Create Room" in create room modal.
   */
   createRoom: function(roominfo) {
-    console.log(roominfo);
-    socket.emit('createRoom', roominfo);
+    socket.emit('createRoom', {roomInfo: roominfo, playerData: Client.playerData});
+  },
+
+  joinOrCreateRandomRoom: function() {
+    console.log('Joining/Creating a random room');
+    socket.emit('joinOrCreateRandomRoom', Client.playerData);
+  },
+
+  /*
+    Broadcasts a forced update for all players in a room.
+    USAGE: When a players shoots an arrow, force all players to update to view the arrow.
+  */
+  broadcastForceUpdateData: function() {
+    socket.emit('broadcastForceUpdateData', Client.roomData.id);
   },
 
   /*
