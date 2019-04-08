@@ -94,4 +94,8 @@ io.on('connection', function(socket) {
     socket.on('fetchAllRooms', function(pageNum) {
         room.fetchAllRooms(socket, pageNum);
     })
+
+    socket.on('deleteRoom', (roomId) => {
+        room.deleteRoom(socket, roomId);
+    })
 });
