@@ -3,7 +3,7 @@ var uuid = require('uuid');
 var redis = require('redis');
 
 module.exports = {
-  createRoom: function (socket, roominfo) {
+  createRoom: function (socket, roominfo, playerData) {
     const roomId = uuid();
     socket.join(roomId);
 
@@ -12,6 +12,7 @@ module.exports = {
 
     // Initializes the player who created the room [Placeholder as of now]
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
+      name: playerData.name,
       x: 0,
       y: 0,
       velocity: { x: 0, y: 0 },
@@ -22,28 +23,29 @@ module.exports = {
     server.io.sockets.adapter.rooms[roomId].arrows = {};
 
     // TODO: Add options to room, placeholder for now
-    server.io.sockets.adapter.rooms[roomId].options = {
-      serverList: function(roominfo) {
-        let rooms = JSON.parse(null || "[]");
-        rooms.push(roominfo);
-        server.client.set("lobbysd", JSON.stringify(rooms));
-        socket.emit("obtainFetchedRooms", rooms);
-      },
-    };
+    // roominfo is passed in from interface.js => contains 
+    // all the room information to be displayed in the room list
+    server.io.sockets.adapter.rooms[roomId].options = roominfo;
+    // Holds the roomId for each room created to be accessed for the delete room function
+    server.io.sockets.adapter.rooms[roomId].options.KEY = roomId;
+    socket.emit("obtainFetchedRooms", [roominfo]);
+
     // TODO: Add password to room, placeholder for now
     server.io.sockets.adapter.rooms[roomId].password = {};
-    
+
     const room = server.io.sockets.adapter.rooms[roomId];
     server.client.set(roomId, JSON.stringify(room), redis.print);
-    server.io.sockets.adapter.rooms[roomId].options.serverList(roominfo);
     socket.emit('joinedRoom', room);
   },
 
-  joinRoom: function (socket, roomId) {
+  joinRoom: function (socket, roomId, playerData) {
     socket.join(roomId);
+
+    console.log(playerData);
 
     // Initializes the player who is joining the room [Placeholder as of now]
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
+      name: playerData.name,
       x: 0,
       y: 0,
       velocity: { x: 0, y: 0 },
@@ -53,13 +55,26 @@ module.exports = {
     const room = server.io.sockets.adapter.rooms[roomId];
     server.client.set(roomId, JSON.stringify(room), redis.print);
     socket.emit('joinedRoom', room);
-    socket.to(roomId).emit('someoneJoined', room);
+    socket.to(roomId).emit('someoneJoined', playerData.name);
+  },
+
+  joinOrCreateRandomRoom: function(socket, data) {
+    const self = this;
+    server.client.dbsize(function(err, size) {
+      if(size == 0) {
+          self.createRoom(socket, {}, data);
+        } else {
+          const self_ = self;
+          server.client.randomkey(function(err, key) {
+            self_.joinRoom(socket, key, data);
+          });
+        }
+      });
   },
 
   // Updates a single player's data inside of a room
   updatePlayerData: function (socket, roomId, player) {
     const room = server.io.sockets.adapter.rooms[roomId];
-    // console.table(server.io.sockets.adapter.rooms);
     if (room) {
       room.sockets[socket.id] = player;
       server.client.set(roomId, JSON.stringify(room));
@@ -69,9 +84,25 @@ module.exports = {
   updateArrowData: function (socket, roomId, arrows) {
     const room = server.io.sockets.adapter.rooms[roomId];
     for (let key in arrows) {
-      room.arrows[key] = arrows[key].data;
+      if(arrows[key].data.life >= arrows[key].data.maxLife) {
+        delete room.arrows[key];
+      } else {
+        room.arrows[key] = arrows[key].data;
+      }
     }
     server.client.set(roomId, JSON.stringify(room));
+    this.broadcastForceUpdateData(socket, roomId);
+  },
+
+  leaveRoom: function(socket, roomId) {
+    const room = server.io.sockets.adapter.rooms[roomId];
+    delete room.sockets[socket.id];
+
+    if(Object.keys(room.sockets).length == 0) {
+      server.client.del(roomId);
+    } else {
+      server.client.set(roomId, JSON.stringify(room));
+    }
   },
 
   // Fetches a room's data for any player requesting it.
@@ -84,12 +115,20 @@ module.exports = {
     });
   },
 
-  sendHitData: function(socket, shooter, roomId) {
+  broadcastForceUpdateData: function(socket, roomId) {
+    socket.to(roomId).emit('forceUpdateData');
+  },
+
+  sendHitData: function(socket, arrow, shooter, roomId) {
+    const self = this;
     const room = server.io.sockets.adapter.rooms[roomId];
-    room.sockets[socket.id].health--;
 
     // Set room message for killfeed
-    server.client.set(roomId, JSON.stringify(room));
+    server.io.in(roomId).emit('kill', {killed: room.sockets[socket.id].name, killer: room.sockets[shooter].name});
+    server.io.to(`${shooter}`).emit('gainScoreDestroyArrow', arrow);
+    server.client.set(roomId, JSON.stringify(room), function(err, reply) {
+      self.broadcastForceUpdateData(socket, roomId);
+    });
   },
 
   fetchAllRooms: function(socket, pageNum) {
@@ -101,15 +140,36 @@ module.exports = {
         roomIndexEnd = data.length;
       }
 
-      let roomIds = data.slice(roomIndexStart, roomIndexEnd)
+      if (roomIndexStart > data.length) {
+        roomIndexStart = 0;
+      }
+
+      let roomIds = data.slice(roomIndexStart, roomIndexEnd);
+
       server.client.mget(roomIds, function (error, data) {
+        console.log("mget", data);
         let rooms = [];
-        data.forEach(roomData => {
-          parsedRoomData = JSON.parse(roomData);
-          rooms.push(parsedRoomData);
-        });
+        // this stops an error from occuring when mget is undefined
+        if (data) {
+          data.forEach(roomData => {
+            parsedRoomData = JSON.parse(roomData);
+            rooms.push(parsedRoomData.options);
+          });
+        }
         socket.emit('obtainFetchedRooms', rooms);
       });
+    });
+  },
+
+  deleteRoom: function (socket, davKey) {
+    server.client.exists(thisKey, function (err, reply) {
+      if (reply === 1) {
+        server.client.del(thisKey, function (err, reply) {
+        console.log("DELETED:", reply);
+        });
+      } else {
+        console.log('doesn\'t exist');
+      }
     });
   }
 }

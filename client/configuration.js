@@ -13,7 +13,7 @@ var config =
       height: window.outerHeight,
     },
     physics: 'arcade',
-    updateTime: 10
+    updateTime: 3
   },
 
   playerOptions: {
@@ -27,8 +27,8 @@ var config =
   },
 
   mapOptions: {
-    width: 480,
-    height: 480,
+    width: 420,
+    height: 420,
     type: null // Map type... Desert/Snow/etc?
   }
 };

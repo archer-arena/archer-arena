@@ -1,17 +1,22 @@
+let disableControl = false;
+let canShoot = true;
 var Player = {
   /*
     Initializes player, called only ONCE after the player joins a server
     - Input, Graphics, Draw
   */
   initialize: function(main) {
-    var crosshair = main.physics.add.sprite(480, 480, 'crosshair');
+    var initCoords = Player.getRespawnCoordinates();
+    var crosshair = main.physics.add.sprite(initCoords.x, initCoords.y, 'crosshair');
     crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
-      physics: main.physics.add.sprite(480, 480, 'archer_blk'),
+      physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer'),
+      text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 8),
+      input: null,
       data: {     
-        x: 0,
-        y: 0,
+        x: initCoords.x,
+        y: initCoords.y,
         velocity: {x: 0, y: 0},
         arrows: [],
         score: 0,
@@ -19,7 +24,8 @@ var Player = {
         health: 1       
       }
     }
-    
+    player.text.setOrigin(0.5);
+    /*
     var particles = main.add.particles('bounty_skull');
 
     /*var emitter = particles.createEmitter({
@@ -28,7 +34,7 @@ var Player = {
       speed: 200,
       alpha: 1,
       scale: 1
-    });*/
+    });
     var testTween = main.tweens.addCounter({
       from: -0.5,
       to: 1,
@@ -53,7 +59,7 @@ var Player = {
   //if (main.player.data.isFirst) {
     emitter.startFollow(player.physics);
   //}
-
+    */
     player.physics.anims.load('up');
     player.physics.anims.load('right');
     player.physics.anims.load('left');
@@ -67,7 +73,7 @@ var Player = {
           if(main.player.data.health != 0) {
             main.player.data.health--;
             main.player.physics.visible = false;
-            Client.sendHitData(shooterId);
+            Client.sendHitData(shooterId, key);
             Player.waitForRespawn(main);
             break;
           }
@@ -85,91 +91,26 @@ var Player = {
     Phaser.Input.Mouse.MouseManager.capture = true;
 
     main.input.on('pointerdown', function () {
-      Arrow.initialize(main, player.physics, crosshair);
+      if(!disableControl && canShoot) { 
+        Arrow.initialize(main, player.physics, crosshair);
+        Player.refreshShotTimer(main);
+      }
     })
 
     /*
       enable camera
     */
     main.cameras.main.setZoom(4);
-    main.cameras.main.startFollow(player.physics, true, 0.1, 0.1);
+    main.cameras.main.startFollow(player.physics, false, 1, 1);
 
     /* 
       Initializes movements key bindings based on configurations
     */
-    moveKeys = main.input.keyboard.addKeys({
+    player.input = main.input.keyboard.addKeys({
       'up': config.playerOptions.controls['up'],
       'down': config.playerOptions.controls['down'],
       'left': config.playerOptions.controls['left'],
       'right': config.playerOptions.controls['right']
-    });
-
-    /*
-      Input event listeners WASD for movement on 'keydown'
-    */
-    main.input.keyboard.on('keydown_W', function(event) {
-      player.physics.setVelocityY(-player.speed)
-      player.physics.anims.play('up');
-    });
-    main.input.keyboard.on('keydown_A', function(event) {
-      player.physics.setVelocityX(-player.speed)
-      player.physics.anims.play('left');
-    });
-    main.input.keyboard.on('keydown_S', function(event) {
-      player.physics.setVelocityY(player.speed)
-      player.physics.anims.play('down');
-    });
-    main.input.keyboard.on('keydown_D', function(event) {
-      player.physics.setVelocityX(player.speed)
-      player.physics.anims.play('right');
-    });
-
-    /*
-      Input event listeners WASD for movement on 'keyup'
-    */
-    main.input.keyboard.on('keyup_W', function (event) {
-      if (moveKeys['down'].isUp)
-        player.physics.setVelocityY(0)
-      else {
-        player.physics.setVelocityY(player.speed)
-        player.physics.anims.play('down');
-      }
-
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
-    });
-    main.input.keyboard.on('keyup_S', function (event) {
-      if (moveKeys['up'].isUp)
-        player.physics.setVelocityY(0)
-      else {
-        player.physics.setVelocityY(-player.speed)
-        player.physics.anims.play('up');
-      }
-
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
-    });
-    main.input.keyboard.on('keyup_A', function (event) {
-      if (moveKeys['right'].isUp)
-        player.physics.setVelocityX(0)
-      else {
-        player.physics.setVelocityX(player.speed)
-        player.physics.anims.play('right');
-      }
-
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
-    });
-    main.input.keyboard.on('keyup_D', function (event) {
-      if (moveKeys['left'].isUp)
-        player.physics.setVelocityX(0)
-      else {
-        player.physics.setVelocityX(-player.speed)
-        player.physics.anims.play('left');
-      }
-
-      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-        player.physics.anims.stop(); 
     });
 
     /*
@@ -191,40 +132,87 @@ var Player = {
     main.input.on('pointermove', function (pointer) {
       if (main.input.mouse.locked)
       {
-          crosshair.x += pointer.movementX;
-          crosshair.y += pointer.movementY;
+        crosshair.x += pointer.movementX;
+        crosshair.y += pointer.movementY;
       }
     }, main);
 
     main.player = player;
     main.crosshair = crosshair;
-
   },
-
-      // Crosshair cannot move offscreen
-      constrainCrosshair: function(crosshair, player) {
-        var distX = crosshair.x-player.x;
-        var distY = crosshair.x-player.y;
-  
-        if (distX > config.gameOptions.width)
-          crosshair.x = player.x+config.gameOptions.width;
-        else if (distX < -config.gameOptions.width)
-          crosshair.x = player.x-config.gameOptions.width;
-        
-        if (distY > config.gameOptions.height)
-          crosshair.y = player.y+config.gameOptions.height;
-        else if (distY < -config.gameOptions.height)
-          crosshair.y = player.y-config.gameOptions.height;
-      },
 
   update(main) {
     main.player.data = {
+      name: Client.playerData.name,
       x: main.player.physics.x,
       y: main.player.physics.y,
       velocity: main.player.physics.body.velocity,
-      arrows: [],
       score: main.player.data.score,
       health: main.player.data.health
+    }
+  },
+
+  move(main) {
+    if(!disableControl) {
+      if(main.player.input['left'].isDown) {
+        main.player.physics.setVelocityX(-main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'left') {
+          main.player.physics.anims.play('left');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('left');
+        }
+      } else {
+        if(!main.player.input['right'].isDown) {
+          main.player.physics.setVelocityX(0);
+        }
+      }
+
+      if(main.player.input['right'].isDown) {
+        main.player.physics.setVelocityX(main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'right') {
+          main.player.physics.anims.play('right');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('right');
+        }
+      } else {
+        if(!main.player.input['left'].isDown) {
+          main.player.physics.setVelocityX(0);
+        }
+      }
+
+      if(main.player.input['up'].isDown) {
+        main.player.physics.setVelocityY(-main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'up' && main.player.input['left'].isUp && main.player.input['right'].isUp) {
+          main.player.physics.anims.play('up');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('up');
+        }
+      } else {
+        if(!main.player.input['down'].isDown) {
+          main.player.physics.setVelocityY(0);
+        }
+      }
+
+      if(main.player.input['down'].isDown) { 
+        main.player.physics.setVelocityY(main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'down' && main.player.input['left'].isUp && main.player.input['right'].isUp) {
+          main.player.physics.anims.play('down');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('down');
+        }
+      } else {
+        if(!main.player.input['up'].isDown) {
+          main.player.physics.setVelocityY(0);
+        }
+      }
+
+      if(main.player.physics.body.velocity.x == 0 && main.player.physics.body.velocity.y == 0) {
+        main.player.physics.anims.stop();
+      }
     }
   },
 
@@ -234,7 +222,11 @@ var Player = {
       if(socket.id != key) {
         // If the roomData does not have a object for a player, create one
         if(!(key in main.otherPlayers)) {
-          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer_blk');
+          main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer');
+          main.otherPlayers[key].anims.load('up');
+          main.otherPlayers[key].anims.load('right');
+          main.otherPlayers[key].anims.load('left');
+          main.otherPlayers[key].anims.load('down');
         } else {
           let predictedPosition = {x: 0, y: 0};
           predictedPosition.x = roomData.sockets[key].x + roomData.sockets[key].velocity.x;
@@ -244,6 +236,18 @@ var Player = {
             main.otherPlayers[key].visible = false;
           } else {
             main.otherPlayers[key].visible = true;
+          }
+
+          if(roomData.sockets[key].velocity.x > 0) {
+            main.otherPlayers[key].anims.play('right');
+          } else if(roomData.sockets[key].velocity.x < 0) {
+            main.otherPlayers[key].anims.play('left');
+          } else if(roomData.sockets[key].velocity.y > 0) {
+            main.otherPlayers[key].anims.play('down');
+          } else if(roomData.sockets[key].velocity.y < 0) {
+            main.otherPlayers[key].anims.play('up');
+          } else {
+            main.otherPlayers[key].anims.stop();
           }
 
           if(roomData.sockets[key].velocity.x != 0 || roomData.sockets[key].velocity.y != 0) {
@@ -268,6 +272,15 @@ var Player = {
     }
   },
 
+  refreshShotTimer(main) {
+    canShoot = false;
+    main.crosshair.setTexture('reloading');
+    setTimeout(function() {
+      canShoot = true;
+      main.crosshair.setTexture('crosshair');
+    }, 2000);
+  },
+
   /*highlightFirst (main) {
     if (main.player.data.isFirst) {
       //highlight with skull icon above head and red edge around player sprite
@@ -278,19 +291,28 @@ var Player = {
   },*/
 
   waitForRespawn(main) {
+    disableControl = true;
+    GUI.drawRespawnNotification();
+    main.player.text.destroy();
+    const respawnCoords = Player.getRespawnCoordinates();
     setTimeout(function() {
-      console.log('Respawned');
-      const respawnCoords = Player.getRespawnCoordinates();
-      main.player.physics.visible = true;
       main.player.physics.setPosition(respawnCoords.x, respawnCoords.y);
+    }, 4500)
+
+    setTimeout(function() {
+      main.player.physics.visible = true;
+      main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 8);
+    }, 5250)
+
+    setTimeout(function() {
       main.player.data.health = 1;
-      console.log(main.player.data.health);
-    }, 5000)
+      disableControl = false;
+    }, 5500)
   },
 
   getRespawnCoordinates() {
-    const x = Math.floor((Math.random() * config.mapOptions.width) + 1);
-    const y = Math.floor((Math.random() * config.mapOptions.height) + 1);
+    const x = Math.floor((Math.random() * config.mapOptions.width) + 30);
+    const y = Math.floor((Math.random() * config.mapOptions.height) + 30);
 
     // TODO: Check if the position has a collider (wall) on it, so player does not spawn in a wall.
 

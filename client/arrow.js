@@ -11,7 +11,7 @@ var Arrow = {
           ySpeed: 0,
           rotation: 0,
           life: 0,
-          maxLife: 10000
+          maxLife: 25
         }
       }
       arrow.physics.body.allowRotation = false;
@@ -30,6 +30,16 @@ var Arrow = {
       arrow.physics.rotation = Phaser.Math.Angle.Between(shooter.x, shooter.y, target.x, target.y);
       arrow.data.rotation = arrow.physics.rotation;
       main.arrows[arrow.data.key] = arrow;
+      main.physics.add.collider(main.arrows[arrow.data.key].physics, worldLayer, function(obj1, obj2) {
+        for(let key in main.arrows) {
+          if(main.arrows[key].physics == obj1) {
+            main.arrows[key].data.life = 100;
+            main.arrows[key].physics.destroy();
+            Client.sendArrowData(main.arrows);
+          }
+        }
+      });
+      Client.sendArrowData(main.arrows);
     },
 
     update: function (main) {
