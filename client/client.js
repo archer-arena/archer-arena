@@ -19,8 +19,12 @@ var Client = {
   initializeConnection: function() {
     console.log('Initializing WebSocket Connection')
     Client.initializePlayerData(true);
+    // will fetch all rooms available as soon as the lobby page is accessed.
+    Client.fetchAllRooms(1);
+
     socket.on('joinedRoom', function(roomData) {
       console.log('You have joined room: ' + roomData.id);
+      // console.table(roomData);
       Client.roomData = roomData;
     });
 
@@ -35,8 +39,7 @@ var Client = {
 
     // Get rooms from server and store in lobby menu
     socket.on('obtainFetchedRooms', function(rooms) {
-      console.log("client.js => we obtained fetch rooms");
-      Client.lobby = Client.lobby.concat(rooms);
+      Client.lobby = rooms;
       updateserverList();
     });
 
@@ -78,7 +81,6 @@ var Client = {
   */
   createRoom: function(roominfo) {
     socket.emit('createRoom', {roomInfo: roominfo, playerData: Client.playerData});
-    console.log("we're in createRoom");      
   },
 
   joinOrCreateRandomRoom: function() {
@@ -98,7 +100,6 @@ var Client = {
     Sends the server the players data such as arrows, player position, etc
   */
   sendPlayerData: function(player) {
-    // console.log("client.js => sending Player Data", player);
     socket.emit('updatePlayerData', {roomId: Client.roomData.id, player: player});
   },
 
@@ -120,5 +121,12 @@ var Client = {
   fetchAllRooms: function (pageNum) {
     socket.emit('fetchAllRooms', pageNum);
   },
+  // for testing purposes. 
+  // this will delete the rooms created while testing if code works
+  // clicking the RED X icon next to JOIN ROOM button next to each room will delete the room
+  deleteRoom: function(roomKey) {
+    socket.emit('deleteRoom', roomKey);
+    this.fetchAllRooms(1);
+  }
 
 };
