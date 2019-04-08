@@ -30,11 +30,21 @@ var Arrow = {
       arrow.physics.rotation = Phaser.Math.Angle.Between(shooter.x, shooter.y, target.x, target.y);
       arrow.data.rotation = arrow.physics.rotation;
       main.arrows[arrow.data.key] = arrow;
+      main.physics.add.collider(main.arrows[arrow.data.key].physics, worldLayer, function(obj1, obj2) {
+        for(let key in main.arrows) {
+          if(main.arrows[key].physics == obj1) {
+            main.arrows[key].data.life = 100;
+            main.arrows[key].physics.destroy();
+            Client.sendArrowData(main.arrows);
+          }
+        }
+      });
       Client.sendArrowData(main.arrows);
     },
 
     update: function (main) {
       for(let key in main.arrows) {
+        console.log(main.arrows[key].data);
         main.arrows[key].data = {
           belongsTo: socket.id,
           x: main.arrows[key].physics.x,
