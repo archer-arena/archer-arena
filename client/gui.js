@@ -74,7 +74,7 @@ var GUI = {
     GUI.leaderboardFeed.sort(function(a, b){return b.score - a.score});
     for(var i = 0; i < GUI.leaderboardFeed.length; i++) {
       if(i < 10)
-        GUI.leaderboardFeed[i].textObject = main.add.bitmapText(config.gameOptions.scale.width - 250, 10 + (i * 42), 'pixel', GUI.leaderboardFeed[i].name + ' - ' + GUI.leaderboardFeed[i].score, 42, 'center');
+        GUI.leaderboardFeed[i].textObject = main.add.bitmapText(config.gameOptions.scale.width - 250, 10 + (i * 42), 'pixel', GUI.leaderboardFeed[i].name + ' - ' + GUI.leaderboardFeed[i].score, 28, 'center');
       else
         break;
     }
@@ -87,7 +87,7 @@ var GUI = {
     GUI.joinFeed.forEach(text => {
       length = GUI.joinFeed.length;
       if(text.object == null) {
-        text.object = main.add.bitmapText(config.gameOptions.scale.width - 350, (config.gameOptions.scale.height / 2) + (length * 24), 'pixel', text.text, 32);
+        text.object = main.add.bitmapText(config.gameOptions.scale.width - 350, (config.gameOptions.scale.height / 2) + (length * 24), 'pixel', text.text, 20);
       }
     });
 
@@ -104,7 +104,7 @@ var GUI = {
     GUI.killFeed.forEach(text => {
       length = GUI.killFeed.length;
       if(text.object == null) {
-        text.object = main.add.bitmapText(50, 25 + (length * 16), 'pixel', text.text, 32);
+        text.object = main.add.bitmapText(50, 25 + (length * 16), 'pixel', text.text, 24);
       }
     });
 
@@ -119,7 +119,7 @@ var GUI = {
 
     if(GUI.respawning) {
       GUI.respawning = false;
-      let test = main.add.bitmapText(config.gameOptions.scale.width/2 + 50, config.gameOptions.scale.height/2 - 50, 'pixel', "You Died.\n Waiting for respawn...", 48, 'center');
+      let test = main.add.bitmapText(config.gameOptions.scale.width/2 + 50, config.gameOptions.scale.height/2 - 50, 'pixel', "You Died.\n Waiting for respawn...", 36, 'center');
       setTimeout(function() {
         test.destroy();
       }, 5000);

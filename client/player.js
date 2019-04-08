@@ -12,7 +12,7 @@ var Player = {
     var player = {
       speed: 100,
       physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer'),
-      text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 12),
+      text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 8),
       input: null,
       data: {     
         x: initCoords.x,
@@ -301,7 +301,7 @@ var Player = {
 
     setTimeout(function() {
       main.player.physics.visible = true;
-      main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 12);
+      main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 8);
     }, 5250)
 
     setTimeout(function() {
