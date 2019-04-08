@@ -120,7 +120,7 @@ module.exports = {
     });
   },
 
-  deleteRoom: function (socket, davKey) {
+  deleteRoom: function (socket, thisKey) {
     server.client.exists(thisKey, function (err, reply) {
       if (reply === 1) {
         server.client.del(thisKey, function (err, reply) {
