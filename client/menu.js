@@ -1,10 +1,6 @@
 function playAsGuest() {
-    $("#log-in-menu").addClass("d-none");
-    $("#overlay-lobby-menu").removeClass("d-none");
-    $("#log-out-btn").addClass("d-none");
-    $("#main-menu-btn").removeClass("d-none");
-    $("#welcome-username").addClass("d-none");
-    $("#welcome-guest").removeClass("d-none");
+    $("#overlay-start-menu").remove();
+    Client.joinOrCreateRandomRoom();
 }
 
 function mainMenu() {
@@ -55,4 +51,3 @@ $("#server-creation-modal").on("hidden.bs.modal", function () {
 $("#registerModal").on("hidden.bs.modal", function () {
     clearRegForm();
 });
-}
