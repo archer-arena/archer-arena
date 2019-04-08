@@ -44,7 +44,6 @@ var Arrow = {
 
     update: function (main) {
       for(let key in main.arrows) {
-        console.log(main.arrows[key].data);
         main.arrows[key].data = {
           belongsTo: socket.id,
           x: main.arrows[key].physics.x,

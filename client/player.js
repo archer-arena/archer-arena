@@ -13,6 +13,7 @@ var Player = {
       speed: 100,
       physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer'),
       text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 12),
+      input: null,
       data: {     
         x: initCoords.x,
         y: initCoords.y,
@@ -105,95 +106,11 @@ var Player = {
     /* 
       Initializes movements key bindings based on configurations
     */
-    moveKeys = main.input.keyboard.addKeys({
+    player.input = main.input.keyboard.addKeys({
       'up': config.playerOptions.controls['up'],
       'down': config.playerOptions.controls['down'],
       'left': config.playerOptions.controls['left'],
       'right': config.playerOptions.controls['right']
-    });
-
-    /*
-      Input event listeners WASD for movement on 'keydown'
-    */
-    main.input.keyboard.on('keydown_W', function(event) {
-      if(!disableControl) {
-        player.physics.setVelocityY(-player.speed)
-        player.physics.anims.play('up');
-      }
-    });
-    main.input.keyboard.on('keydown_A', function(event) {
-      if(!disableControl) {
-        player.physics.setVelocityX(-player.speed)
-        player.physics.anims.play('left');
-      }
-    });
-    main.input.keyboard.on('keydown_S', function(event) {
-      if(!disableControl) {
-        player.physics.setVelocityY(player.speed)
-        player.physics.anims.play('down');
-      }
-    });
-    main.input.keyboard.on('keydown_D', function(event) {
-      if(!disableControl) {
-        player.physics.setVelocityX(player.speed)
-        player.physics.anims.play('right');
-      }
-    });
-
-    /*
-      Input event listeners WASD for movement on 'keyup'
-    */
-    main.input.keyboard.on('keyup_W', function (event) {
-      if(!disableControl) {
-        if (moveKeys['down'].isUp)
-          player.physics.setVelocityY(0)
-        else {
-          player.physics.setVelocityY(player.speed)
-          player.physics.anims.play('down');
-        }
-
-        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-          player.physics.anims.stop(); 
-      }
-    });
-    main.input.keyboard.on('keyup_S', function (event) {
-      if(!disableControl) {
-        if (moveKeys['up'].isUp)
-          player.physics.setVelocityY(0)
-        else {
-          player.physics.setVelocityY(-player.speed)
-          player.physics.anims.play('up');
-        }
-
-        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-          player.physics.anims.stop(); 
-      }
-    });
-    main.input.keyboard.on('keyup_A', function (event) {
-      if(!disableControl) {
-        if (moveKeys['right'].isUp)
-          player.physics.setVelocityX(0)
-        else {
-          player.physics.setVelocityX(player.speed)
-          player.physics.anims.play('right');
-        }
-
-        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-          player.physics.anims.stop(); 
-      }
-    });
-    main.input.keyboard.on('keyup_D', function (event) {
-      if(!disableControl) {
-        if (moveKeys['left'].isUp)
-          player.physics.setVelocityX(0)
-        else {
-          player.physics.setVelocityX(-player.speed)
-          player.physics.anims.play('left');
-        }
-
-        if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
-          player.physics.anims.stop(); 
-      }
     });
 
     /*
@@ -232,6 +149,70 @@ var Player = {
       velocity: main.player.physics.body.velocity,
       score: main.player.data.score,
       health: main.player.data.health
+    }
+  },
+
+  move(main) {
+    if(!disableControl) {
+      if(main.player.input['left'].isDown) {
+        main.player.physics.setVelocityX(-main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'left') {
+          main.player.physics.anims.play('left');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('left');
+        }
+      } else {
+        if(!main.player.input['right'].isDown) {
+          main.player.physics.setVelocityX(0);
+        }
+      }
+
+      if(main.player.input['right'].isDown) {
+        main.player.physics.setVelocityX(main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'right') {
+          main.player.physics.anims.play('right');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('right');
+        }
+      } else {
+        if(!main.player.input['left'].isDown) {
+          main.player.physics.setVelocityX(0);
+        }
+      }
+
+      if(main.player.input['up'].isDown) {
+        main.player.physics.setVelocityY(-main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'up' && main.player.input['left'].isUp && main.player.input['right'].isUp) {
+          main.player.physics.anims.play('up');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('up');
+        }
+      } else {
+        if(!main.player.input['down'].isDown) {
+          main.player.physics.setVelocityY(0);
+        }
+      }
+
+      if(main.player.input['down'].isDown) { 
+        main.player.physics.setVelocityY(main.player.speed)
+
+        if(main.player.physics.anims.currentAnim.key != 'down' && main.player.input['left'].isUp && main.player.input['right'].isUp) {
+          main.player.physics.anims.play('down');
+        } else if(!main.player.physics.anims.isPlaying) {
+          main.player.physics.anims.play('down');
+        }
+      } else {
+        if(!main.player.input['up'].isDown) {
+          main.player.physics.setVelocityY(0);
+        }
+      }
+
+      if(main.player.physics.body.velocity.x == 0 && main.player.physics.body.velocity.y == 0) {
+        main.player.physics.anims.stop();
+      }
     }
   },
 

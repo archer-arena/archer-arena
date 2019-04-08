@@ -113,16 +113,14 @@ function create()
   worldLayer.setCollisionByProperty({collides: true});
   aboveLayer.setDepth(10);
 
-  //For Debug
- /*
+  /*
   const debugGraphics = this.add.graphics().setAlpha(0.75);
-  world.renderDebug(debugGraphics, {
+  worldLayer.renderDebug(debugGraphics, {
   	tileColor: null, 
   	collidingTileColor: new Phaser.Display.Color(243, 134,48,255),
   	faceColor: new Phaser.Display.Color(40, 39, 37, 255)
   });
- */
-
+  */
   this.anims.create({
       key: 'right', //animation for the right direction of movement
       frames: this.anims.generateFrameNumbers('archer', { start: 0, end: 2}), //utilize the first 3 images of the spritesheet
@@ -199,6 +197,7 @@ function update()
       this.player.text.x = this.player.physics.x;
       this.player.text.y = this.player.physics.y - 16;
       this.crosshair.body.velocity = this.player.physics.body.velocity;
+      Player.move(this);
     }
 
     timer++;
