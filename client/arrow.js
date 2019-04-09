@@ -81,8 +81,7 @@ var Arrow = {
           }
         }
       }
-      
-      /*
+
       // Check for arrows that have expired
       for(let key in main.otherArrows) {
         if(!(key in roomData.arrows)) {
@@ -91,6 +90,5 @@ var Arrow = {
           delete main.otherArrows[key];
         }
       }
-      */
     }
 }
