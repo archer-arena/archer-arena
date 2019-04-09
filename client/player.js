@@ -64,22 +64,6 @@ var Player = {
     player.physics.anims.load('left');
     player.physics.anims.load('down');
 
-    // player vs arrow collider
-    main.physics.add.overlap(player.physics, main.otherArrowsCollisionGroup, function(pSprite, aSprite) {
-      for(let key in main.otherArrows) {
-        if(main.otherArrows[key] == aSprite) {
-          let shooterId = key.slice(0, -6);
-          if(main.player.data.health != 0) {
-            main.player.data.health--;
-            main.player.physics.visible = false;
-            Client.sendHitData(shooterId, key);
-            Player.waitForRespawn(main);
-            break;
-          }
-        }
-      }
-    });
-
     // player vs player collider
     //main.physics.add.collider(player, [otherPlayer??], collidePlayer);
 

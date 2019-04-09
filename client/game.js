@@ -190,10 +190,25 @@ function update()
     config file's updateTimer. 
   */
   if(Client.roomData) {
-
+    const self = this;
     if(!this.player && !initialized) {
       Player.initialize(this);
       this.physics.add.collider(this.player.physics, worldLayer);
+      // player vs arrow collider
+      this.physics.add.overlap(this.player.physics, this.otherArrowsCollisionGroup, function(pSprite, aSprite) {
+        for(let key in self.otherArrows) {
+          if(self.otherArrows[key] == aSprite) {
+            let shooterId = key.slice(0, -6);
+            if(self.player.data.health != 0) {
+              self.player.data.health--;
+              self.player.physics.visible = false;
+              Client.sendHitData(shooterId, key);
+              Player.waitForRespawn(self);
+              break;
+            }
+          }
+        }
+      });
       initialized = true;
     }
 
@@ -210,11 +225,15 @@ function update()
         this.otherPlayers[key].text.y = this.otherPlayers[key].y - 16;
 
         if(firstPlayer == key && crown) {
+          if(!crown.visible)
+            crown.visible = true;
           crown.x = this.otherPlayers[firstPlayer].x;
           crown.y = this.otherPlayers[firstPlayer].y - 26;
         }
       } else {
         if(socket.id == firstPlayer && crown) {
+          if(!crown.visible)
+            crown.visible = true;
           crown.x = this.player.physics.x;
           crown.y = this.player.physics.y - 26;
         }
@@ -234,6 +253,23 @@ function update()
         Arrow.updateOtherArrows(this, Client.roomData);
       }
       timer = 0;
+      
+      for(let key in this.otherArrows) {
+        if (this.otherArrows[key].x < this.player.physics.x + 12 &&
+          this.otherArrows[key].x + 12 > this.player.physics.x &&
+          this.otherArrows[key].y < this.player.physics.y + 12 &&
+          this.otherArrows[key].y + 12 > this.player.physics.y) 
+        {
+          let shooterId = key.slice(0, -6);
+          if(this.player.data.health != 0) {
+            this.player.data.health--;
+            this.player.physics.visible = false;
+            Client.sendHitData(shooterId, key);
+            Player.waitForRespawn(this);
+            break;
+          }
+        }
+      }
     }
 
     if(forcedUpdate) {
