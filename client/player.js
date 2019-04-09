@@ -8,11 +8,10 @@ var Player = {
   initialize: function(main) {
     var initCoords = Player.getRespawnCoordinates();
     var crosshair = main.physics.add.sprite(initCoords.x, initCoords.y, 'crosshair');
-    crosshair.setCollideWorldBounds(true);
     var player = {
       speed: 100,
       physics: main.physics.add.sprite(initCoords.x, initCoords.y, 'archer'),
-      text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 8),
+      text: main.add.bitmapText(initCoords.x, initCoords.y - 16, 'pixel', Client.playerData.name, 8, 'center'),
       input: null,
       data: {     
         x: initCoords.x,
@@ -223,6 +222,8 @@ var Player = {
         // If the roomData does not have a object for a player, create one
         if(!(key in main.otherPlayers)) {
           main.otherPlayers[key] = main.physics.add.sprite(480, 480, 'archer');
+          main.otherPlayers[key].text = main.add.bitmapText(main.otherPlayers[key].x, main.otherPlayers[key].y - 16, 'pixel', Client.roomData.sockets[key].name, 8, 'center')
+          main.otherPlayers[key].text.setOrigin(0.5);
           main.otherPlayers[key].anims.load('up');
           main.otherPlayers[key].anims.load('right');
           main.otherPlayers[key].anims.load('left');
@@ -233,19 +234,43 @@ var Player = {
           predictedPosition.y = roomData.sockets[key].y + roomData.sockets[key].velocity.y;
 
           if(roomData.sockets[key].health == 0) {
+            if(firstPlayer == key) {
+              crown.visible = false;
+            }
+            main.otherPlayers[key].text.visible = false;
             main.otherPlayers[key].visible = false;
           } else {
+            if(firstPlayer == key) {
+              crown.visible = true;
+            }
+            main.otherPlayers[key].text.visible = true;
             main.otherPlayers[key].visible = true;
           }
 
           if(roomData.sockets[key].velocity.x > 0) {
-            main.otherPlayers[key].anims.play('right');
+            if(main.otherPlayers[key].anims.currentAnim.key != 'right') {
+              main.otherPlayers[key].anims.play('right');
+            } else if(!main.otherPlayers[key].anims.isPlaying) {
+              main.otherPlayers[key].anims.play('right');
+            }
           } else if(roomData.sockets[key].velocity.x < 0) {
-            main.otherPlayers[key].anims.play('left');
+            if(main.otherPlayers[key].anims.currentAnim.key != 'left') {
+              main.otherPlayers[key].anims.play('left');
+            } else if(!main.otherPlayers[key].anims.isPlaying) {
+              main.otherPlayers[key].anims.play('left');
+            }
           } else if(roomData.sockets[key].velocity.y > 0) {
-            main.otherPlayers[key].anims.play('down');
+            if(main.otherPlayers[key].anims.currentAnim.key != 'down') {
+              main.otherPlayers[key].anims.play('down');
+            } else if(!main.otherPlayers[key].anims.isPlaying) {
+              main.otherPlayers[key].anims.play('down');
+            }
           } else if(roomData.sockets[key].velocity.y < 0) {
-            main.otherPlayers[key].anims.play('up');
+            if(main.otherPlayers[key].anims.currentAnim.key != 'up') {
+              main.otherPlayers[key].anims.play('up');
+            } else if(!main.otherPlayers[key].anims.isPlaying) {
+              main.otherPlayers[key].anims.play('up');
+            }
           } else {
             main.otherPlayers[key].anims.stop();
           }
@@ -266,6 +291,7 @@ var Player = {
     // Check for players who have left
     for(let key in main.otherPlayers) {
       if(!(key in roomData.sockets)) {
+        main.otherPlayers[key].text.destroy();
         main.otherPlayers[key].destroy();
         delete main.otherPlayers[key];
       }
@@ -297,11 +323,13 @@ var Player = {
     const respawnCoords = Player.getRespawnCoordinates();
     setTimeout(function() {
       main.player.physics.setPosition(respawnCoords.x, respawnCoords.y);
+      main.crosshair.setPosition(respawnCoords.x, respawnCoords.y);
     }, 4500)
 
     setTimeout(function() {
       main.player.physics.visible = true;
-      main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 8);
+      main.player.text = main.add.bitmapText(respawnCoords.x, respawnCoords.y - 16, 'pixel', Client.playerData.name, 8, 'center');
+      main.player.text.setOrigin(0.5);
     }, 5250)
 
     setTimeout(function() {
@@ -311,8 +339,8 @@ var Player = {
   },
 
   getRespawnCoordinates() {
-    const x = Math.floor((Math.random() * config.mapOptions.width) + 30);
-    const y = Math.floor((Math.random() * config.mapOptions.height) + 30);
+    const x = Math.floor((Math.random() * config.mapOptions.width) + 50);
+    const y = Math.floor((Math.random() * config.mapOptions.height) + 50);
 
     // TODO: Check if the position has a collider (wall) on it, so player does not spawn in a wall.
 

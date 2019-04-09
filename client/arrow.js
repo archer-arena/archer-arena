@@ -77,11 +77,12 @@ var Arrow = {
             main.otherArrows[key].rotation = roomData.arrows[key].rotation;
             main.otherArrowsCollisionGroup.add(main.otherArrows[key]);
           } else {
-            main.physics.moveTo(main.otherArrows[key], roomData.arrows[key].x + roomData.arrows[key].xSpeed, roomData.arrows[key].y + roomData.arrows[key].ySpeed, 200, 1000);
+            main.physics.moveTo(main.otherArrows[key], roomData.arrows[key].x + roomData.arrows[key].xSpeed, roomData.arrows[key].y + roomData.arrows[key].ySpeed, 300, 1000);
           }
         }
       }
-
+      
+      /*
       // Check for arrows that have expired
       for(let key in main.otherArrows) {
         if(!(key in roomData.arrows)) {
@@ -90,5 +91,6 @@ var Arrow = {
           delete main.otherArrows[key];
         }
       }
+      */
     }
 }

@@ -34,6 +34,8 @@ let score = false;
 let arrowKey = '';
 let worldLayer; 
 let forcedUpdate = false;
+let crown = null;
+let firstPlayer = '';
 
 
 /*
@@ -61,7 +63,7 @@ function preload()
   this.load.spritesheet('arrow_sprite','assets/graphics/player/arrow_sprite.png',
     { frameWidth: 16, frameHeight: 10});
 
-  this.load.image('bounty_skull', 'assets/graphics/player/bounty_skull.png');
+  this.load.image('bounty_crown', 'assets/graphics/player/bounty_crown.png');
   this.load.image('test_shape', 'assets/graphics/player/test_shape.png');
 
   //-----MAP-----//
@@ -154,6 +156,8 @@ function create()
     frameQuantity: 4,
   });
   
+  crown = this.physics.add.sprite(0, 0, 'bounty_crown');
+
   //Debug Graphics
   /*
   this.input.keyboard.once('keyboard_D', event => {
@@ -198,6 +202,24 @@ function update()
       this.player.text.y = this.player.physics.y - 16;
       this.crosshair.body.velocity = this.player.physics.body.velocity;
       Player.move(this);
+    }
+
+    for(let key in Client.roomData.sockets) {
+      if(socket.id != key && this.otherPlayers[key]) {
+        this.otherPlayers[key].text.x = this.otherPlayers[key].x;
+        this.otherPlayers[key].text.y = this.otherPlayers[key].y - 16;
+
+        if(firstPlayer == key && crown) {
+          crown.x = this.otherPlayers[firstPlayer].x;
+          crown.y = this.otherPlayers[firstPlayer].y - 26;
+        }
+      } else {
+        if(socket.id == firstPlayer && crown) {
+          crown.x = this.player.physics.x;
+          crown.y = this.player.physics.y - 26;
+        }
+      }
+
     }
 
     timer++;

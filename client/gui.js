@@ -78,6 +78,8 @@ var GUI = {
       else
         break;
     }
+
+    firstPlayer = GUI.leaderboardFeed[0].id;
   },
 
   update: function(main) {
