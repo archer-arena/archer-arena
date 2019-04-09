@@ -21,6 +21,11 @@ $("#search-room-filter").on("keyup", function () {
     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
   });
 });
+$("#exit-game").on('keypress',function(evt) {
+  if (evt.keyCode == 27) {
+    
+  }
+});
 // Returns an object with the roomName/createdBy/gameMode/playerCount of each room
 function getRoomInfo() {
   return {

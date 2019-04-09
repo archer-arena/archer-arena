@@ -1,6 +1,6 @@
 function playAsGuest() {
     $("#overlay-start-menu").remove();
-    Client.joinOrCreateRandomRoom();
+    // Client.joinOrCreateRandomRoom();
 }
 
 function mainMenu() {
