@@ -18,6 +18,7 @@ var Player = {
         arrows: [],
         score: 0,
         isFirst: false,
+        stamina: 100,
         health: 1       
       }
     }
@@ -104,7 +105,9 @@ var Player = {
       'up': config.playerOptions.controls['up'],
       'down': config.playerOptions.controls['down'],
       'left': config.playerOptions.controls['left'],
-      'right': config.playerOptions.controls['right']
+      'right': config.playerOptions.controls['right'],
+      'shift': config.playerOptions.controls['shift'],
+      'space': config.playerOptions.controls['space']
     });
 
     /*
@@ -125,6 +128,23 @@ var Player = {
     main.input.keyboard.on('keydown_D', function(event) {
       player.physics.setVelocityX(player.speed)
       player.physics.anims.play('right');
+    });
+
+    // Sprint function
+
+    main.input.keyboard.on('keydown_sprint', function(event) {
+      player.physics.setVelocity(player.speed*2);  
+    });
+
+    main.input.keyboard.on("keyup_sprint", function(event){
+      if (moveKeys['sprint'].isUp)
+        player.physics.setVelocity(player.speed);
+      else {
+        player.physics.setVelocity(player.speed*2);
+      }
+
+      if(player.physics.body.velocity.x == 0 && player.physics.body.velocity.y == 0)
+        player.physics.anims.stop();
     });
 
     /*
