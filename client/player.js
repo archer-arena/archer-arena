@@ -86,7 +86,6 @@ var Player = {
     */
     main.cameras.main.setZoom(4);
     main.cameras.main.startFollow(player.physics, true, 0.1, 0.1);
-
     /* 
       Initializes movements key bindings based on configurations
     */
@@ -185,17 +184,19 @@ var Player = {
       // Crosshair cannot move offscreen
       constrainCrosshair: function(crosshair, player) {
         var distX = crosshair.x-player.x;
-        var distY = crosshair.x-player.y;
-  
-        if (distX > config.gameOptions.width)
-          crosshair.x = player.x+config.gameOptions.width;
-        else if (distX < -config.gameOptions.width)
-          crosshair.x = player.x-config.gameOptions.width;
+        var distY = crosshair.y-player.y;
+        var constrainWidth = config.gameOptions.width;
+        var constrainHeight = config.gameOptions.height;
+
+        if (distX > constrainWidth)
+          crosshair.x = player.x+constrainWidth;
+        else if (distX < -constrainWidth)
+          crosshair.x = player.x-constrainWidth;
         
-        if (distY > config.gameOptions.height)
-          crosshair.y = player.y+config.gameOptions.height;
-        else if (distY < -config.gameOptions.height)
-          crosshair.y = player.y-config.gameOptions.height;
+        if (distY > constrainHeight)
+          crosshair.y = player.y+constrainHeight;
+        else if (distY < -constrainHeight)
+          crosshair.y = player.y-constrainHeight;
       },
 
   update(main) {

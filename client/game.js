@@ -143,7 +143,9 @@ function update()
       timer = 0;
     }
   }
-  //this.crosshair.body.velocity.x = this.player.body.velocity.x;
-  //this.crosshair.body.velocity.y = this.player.body.velocity.y;
-  //Player.constrainCrosshair(this.crosshair, this.player);
+  //move crosshair with player
+  this.crosshair.body.velocity.x = this.player.data.velocity.x;
+  this.crosshair.body.velocity.y = this.player.data.velocity.y;
+
+  Player.constrainCrosshair(this.crosshair, this.player);
 }
