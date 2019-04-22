@@ -26,8 +26,10 @@ module.exports = {
     // roominfo is passed in from interface.js => contains 
     // all the room information to be displayed in the room list
     server.io.sockets.adapter.rooms[roomId].options = roominfo;
+    console.log(roomId);
     // Holds the roomId for each room created to be accessed for the delete room function
     server.io.sockets.adapter.rooms[roomId].options.KEY = roomId;
+    
     socket.emit("obtainFetchedRooms", [roominfo]);
 
     // TODO: Add password to room, placeholder for now
@@ -161,7 +163,7 @@ module.exports = {
     });
   },
 
-  deleteRoom: function (socket, davKey) {
+  deleteRoom: function (socket, thisKey) {
     server.client.exists(thisKey, function (err, reply) {
       if (reply === 1) {
         server.client.del(thisKey, function (err, reply) {

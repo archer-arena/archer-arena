@@ -24,7 +24,7 @@ var Client = {
 
     socket.on('joinedRoom', function(roomData) {
       console.log('You have joined room: ' + roomData.id);
-      // console.table(roomData);
+      console.table(roomData);
       Client.roomData = roomData;
     });
 

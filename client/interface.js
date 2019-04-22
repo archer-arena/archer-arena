@@ -6,7 +6,7 @@ Functions that relate to the main.html file should go in here.
 document.getElementById("createRoomSubmit").addEventListener("click", function () {
   Client.createRoom(getRoomInfo());
   Client.fetchAllRooms(1);
-  loadIntoGame();
+  // loadIntoGame();
 });
 // Refressh button will refresh the list of rooms available to the player
 document.getElementById("refresh-btn").addEventListener("click", function () {
