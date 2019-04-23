@@ -29,7 +29,7 @@ module.exports = {
     console.log(roomId);
     // Holds the roomId for each room created to be accessed for the delete room function
     server.io.sockets.adapter.rooms[roomId].options.KEY = roomId;
-    
+
     socket.emit("obtainFetchedRooms", [roominfo]);
 
     // TODO: Add password to room, placeholder for now
