@@ -12,6 +12,7 @@ document.getElementById("createRoomSubmit").addEventListener("click", function (
 document.getElementById("refresh-btn").addEventListener("click", function () {
   Client.fetchAllRooms(1);
 });
+
 // Search filter for the room list.
 // Player can search by room name/player count/ game mode/ created by
 // Filter reduces list as user types in filter
@@ -34,20 +35,19 @@ function getRoomInfo() {
 // create room button located in the modal of create room
 function updateserverList() {
   var roomHTML = "";
-  // console.table(Client.lobby);
+  console.table(Client.lobby);
   Client.lobby.forEach(room => {
+    console.log(room);
     try {
-      if (true) {
         roomHTML += ` <tr>
         <th scope="row">${room.roomName}</th>
         <td>${room.createdBy}</td>
         <td>${room.gameMode}</td>
         <td>${room.playerCount}</td>
-        <td><button class="btn btn-primary btn-block">Join</button></td>
-        <td><button type="button" class="btn btn-danger" onClick="Client.deleteRoom('${room.KEY}')">X</button></td>
+        <td><button class="btn btn-primary btn-block" onClick="Client.joinRoom('${room.KEY}')">Join</button></td>
       </tr>`;
       console.log("appending to table");
-      }
+      
     } catch (error) {
       console.error("BAD:", error.message);
     }

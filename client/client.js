@@ -24,8 +24,8 @@ var Client = {
 
     socket.on('joinedRoom', function(roomData) {
       console.log('You have joined room: ' + roomData.id);
-      console.table(roomData);
       Client.roomData = roomData;
+      loadIntoGame();
     });
 
     socket.on('someoneJoined', function(playerName) {
@@ -40,6 +40,7 @@ var Client = {
     // Get rooms from server and store in lobby menu
     socket.on('obtainFetchedRooms', function(rooms) {
       Client.lobby = rooms;
+      // console.table(rooms);
       updateserverList();
     });
 
@@ -72,8 +73,9 @@ var Client = {
   */
   joinRoom: function(roomId) {
     socket.emit('joinRoom', {roomId: roomId, playerData: Client.playerData});
+    console.log("joining room:", roomId);
   },
-  
+ 
   /*
     Client will create a room, room will be created in Redis...
     Client will then join the created room.

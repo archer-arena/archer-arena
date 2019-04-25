@@ -25,6 +25,13 @@ function loggedIn() {
     $("#welcome-username").removeClass("d-none");
 }
 
+function loggedInAsGuest() {
+    $("#log-in-menu").addClass("d-none");
+    $("#overlay-lobby-menu").removeClass("d-none");
+    $("#log-out-btn").addClass("d-none");
+    $("#welcome-username").addClass("d-none");
+}
+
 function clearRegForm() {
     $("#regForm")[0].reset();
 }

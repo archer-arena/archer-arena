@@ -68,7 +68,7 @@
                 <br>
                 <div class="row justify-content-center">
                   <div class="col-5 col-sm-3 col-lg-4">
-                    <button type="button" class="btn btn-secondary w-100" onclick="playAsGuest()">Play as Guest</button>
+                    <button type="button" class="btn btn-secondary w-100" onclick="loggedInAsGuest()">Play as Guest</button>
                   </div>
                 </div>
                 <br>
@@ -146,9 +146,6 @@
                 <div class="input-group">
                   <input id="search-room-filter" class="w-75" type="text" placeholder="Search for Lobby"
                     style="border-radius: 25px; padding-left:.5em;">
-                  <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button">Search</button>
-                  </div>
                 </div>
               </div>
               <div class="col-4 col-lg-3 col-xl-2">
@@ -234,18 +231,18 @@
             <div class="row">
               <div class="col-6">
                 <select class="custom-select custom-select-lg mb-3" id="map-type-modal">
-                  <option selected>Map Type</option>
-                  <option value="1">Snow</option>
-                  <option value="2">Desert</option>
-                  <option value="3">Forest</option>
+                  <option value>Map Type</option>
+                  <option value="Snow">Snow</option>
+                  <option value="Desert">Desert</option>
+                  <option value="Forest">Forest</option>
                 </select>
               </div>
               <div class="col-6">
                 <select class="custom-select custom-select-lg mb-3" id="game-mode-modal">
-                  <option selected>Game Mode</option>
-                  <option value="1">Co-Op</option>
-                  <option value="2">Single Player</option>
-                  <option value="3">Battle Royal</option>
+                  <option value>Game Mode</option>
+                  <option value="Capture the Flag">Capture the Flag</option>
+                  <option value="Free for All">Free for All</option>
+                  <option value="DLC -> $19.99">DLC -> $19.99</option>
                 </select>
               </div>
             </div>
