@@ -26,8 +26,9 @@ module.exports = {
     // roominfo is passed in from interface.js => contains 
     // all the room information to be displayed in the room list
     server.io.sockets.adapter.rooms[roomId].options = roominfo;
+    // console.log(roomId);
     // Holds the roomId for each room created to be accessed for the delete room function
-    server.io.sockets.adapter.rooms[roomId].options.KEY = roomId;
+
     socket.emit("obtainFetchedRooms", [roominfo]);
 
     // TODO: Add password to room, placeholder for now
@@ -41,7 +42,7 @@ module.exports = {
   joinRoom: function (socket, roomId, playerData) {
     socket.join(roomId);
 
-    console.log(playerData);
+    // console.log(playerData);
 
     // Initializes the player who is joining the room [Placeholder as of now]
     server.io.sockets.adapter.rooms[roomId].sockets[socket.id] = {
@@ -58,18 +59,18 @@ module.exports = {
     socket.to(roomId).emit('someoneJoined', playerData.name);
   },
 
-  joinOrCreateRandomRoom: function(socket, data) {
+  joinOrCreateRandomRoom: function (socket, data) {
     const self = this;
-    server.client.dbsize(function(err, size) {
-      if(size == 0) {
-          self.createRoom(socket, {}, data);
-        } else {
-          const self_ = self;
-          server.client.randomkey(function(err, key) {
-            self_.joinRoom(socket, key, data);
-          });
-        }
-      });
+    server.client.dbsize(function (err, size) {
+      if (size == 0) {
+        self.createRoom(socket, {}, data);
+      } else {
+        const self_ = self;
+        server.client.randomkey(function (err, key) {
+          self_.joinRoom(socket, key, data);
+        });
+      }
+    });
   },
 
   // Updates a single player's data inside of a room
@@ -84,7 +85,7 @@ module.exports = {
   updateArrowData: function (socket, roomId, arrows) {
     const room = server.io.sockets.adapter.rooms[roomId];
     for (let key in arrows) {
-      if(arrows[key].data.life >= arrows[key].data.maxLife) {
+      if (arrows[key].data.life >= arrows[key].data.maxLife) {
         delete room.arrows[key];
       } else {
         room.arrows[key] = arrows[key].data;
@@ -94,11 +95,11 @@ module.exports = {
     this.broadcastForceUpdateData(socket, roomId);
   },
 
-  leaveRoom: function(socket, roomId) {
+  leaveRoom: function (socket, roomId) {
     const room = server.io.sockets.adapter.rooms[roomId];
     delete room.sockets[socket.id];
 
-    if(Object.keys(room.sockets).length == 0) {
+    if (Object.keys(room.sockets).length == 0) {
       server.client.del(roomId);
     } else {
       server.client.set(roomId, JSON.stringify(room));
@@ -115,26 +116,28 @@ module.exports = {
     });
   },
 
-  broadcastForceUpdateData: function(socket, roomId) {
+  broadcastForceUpdateData: function (socket, roomId) {
     socket.to(roomId).emit('forceUpdateData');
   },
 
-  sendHitData: function(socket, arrow, shooter, roomId) {
+  sendHitData: function (socket, arrow, shooter, roomId) {
     const self = this;
     const room = server.io.sockets.adapter.rooms[roomId];
 
     // Set room message for killfeed
-    server.io.in(roomId).emit('kill', {killed: room.sockets[socket.id].name, killer: room.sockets[shooter].name});
+    server.io.in(roomId).emit('kill', { killed: room.sockets[socket.id].name, killer: room.sockets[shooter].name });
     server.io.to(`${shooter}`).emit('gainScoreDestroyArrow', arrow);
-    server.client.set(roomId, JSON.stringify(room), function(err, reply) {
+    server.client.set(roomId, JSON.stringify(room), function (err, reply) {
       self.broadcastForceUpdateData(socket, roomId);
     });
   },
 
-  fetchAllRooms: function(socket, pageNum) {
-    server.client.keys('*', function(error, data) {
+  fetchAllRooms: function (socket, pageNum) {
+    server.client.keys('*', function (error, data) {
       roomIndexStart = (pageNum - 1) * 10;
       roomIndexEnd = (pageNum * 10);
+
+
 
       if (roomIndexEnd > data.length) {
         roomIndexEnd = data.length;
@@ -146,14 +149,20 @@ module.exports = {
 
       let roomIds = data.slice(roomIndexStart, roomIndexEnd);
 
+      console.log("Above mget");
       server.client.mget(roomIds, function (error, data) {
-        console.log("mget", data);
+        // console.table(roomIds);
+        // console.log("mget", data);
         let rooms = [];
+        console.log(`Printing data: ${data}`);
+        // console.table(data);
         // this stops an error from occuring when mget is undefined
         if (data) {
           data.forEach(roomData => {
             parsedRoomData = JSON.parse(roomData);
+            parsedRoomData.options.KEY = parsedRoomData.id;
             rooms.push(parsedRoomData.options);
+            console.log("parsedRoomData: ", parsedRoomData);
           });
         }
         socket.emit('obtainFetchedRooms', rooms);
@@ -161,11 +170,13 @@ module.exports = {
     });
   },
 
-  deleteRoom: function (socket, davKey) {
+  deleteRoom: function (socket, thisKey) {
     server.client.exists(thisKey, function (err, reply) {
       if (reply === 1) {
-        server.client.del(thisKey, function (err, reply) {
-        console.log("DELETED:", reply);
+        // .DEL removes from server, .del sets value to null
+        server.client.DEL(thisKey, function (err, reply) {
+
+          console.log("DELETED:", reply);
         });
       } else {
         console.log('doesn\'t exist');
