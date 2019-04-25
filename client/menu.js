@@ -6,6 +6,7 @@ function playAsGuest() {
 function mainMenu() {
     $("#overlay-lobby-menu").addClass("d-none");
     $("#log-in-menu").removeClass("d-none");
+    Auth.logout();
 }
 
 function privateSelect() {
@@ -23,6 +24,19 @@ function loggedIn() {
     $("#log-out-btn").removeClass("d-none");
     $("#welcome-guest").addClass("d-none");
     $("#welcome-username").removeClass("d-none");
+    Auth.login()
+}
+
+function isLoggedIn() {
+    if(Auth.parseLogin()) {
+        $("#log-in-menu").addClass("d-none");
+        $("#overlay-lobby-menu").removeClass("d-none");
+        $("#main-menu-btn").addClass("d-none");
+        $("#log-out-btn").removeClass("d-none");
+        $("#welcome-guest").addClass("d-none");
+        $("#welcome-username").removeClass("d-none");
+        Auth.setProfile();
+    }
 }
 
 function clearRegForm() {
@@ -51,3 +65,5 @@ $("#server-creation-modal").on("hidden.bs.modal", function () {
 $("#registerModal").on("hidden.bs.modal", function () {
     clearRegForm();
 });
+
+isLoggedIn();

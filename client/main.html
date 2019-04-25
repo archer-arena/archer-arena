@@ -9,8 +9,10 @@
   <title>Archer Arena</title>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.16.1/dist/phaser.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdn.auth0.com/js/auth0/9.10/auth0.min.js"></script>
   <script type="text/javascript" src="./socket.io/socket.io.js"></script>
   <script type="text/javascript" src="./client.js"></script>
+  <script type="text/javascript" src="./auth.js"></script>
   <script type="text/javascript" src="./configuration.js"></script>
   <script type="text/javascript" src="./arrow.js"></script>
   <script type="text/javascript" src="./player.js"></script>
@@ -32,6 +34,7 @@
                 </div>
               </div>
               <form>
+                <!--
                 <div class="form-group">
                   <div class="row justify-content-center">
                     <div class="col-10 col-sm-6 col-lg-5">
@@ -51,6 +54,7 @@
                     <input class="form-check-input" type="checkbox">Remember Me
                   </label>
                 </div>
+                -->
                 <div class="row justify-content-center">
                   <div class="col-4 col-sm-3 col-lg-4">
                     <button type="button" class="btn btn-primary w-100" onclick="loggedIn()">Log In</button>
@@ -310,7 +314,7 @@
                     Menu</button>
                   <button type="button" id="log-out-btn" class="btn btn-primary float-right" onclick="mainMenu()">Log
                     Out</button>
-                  <div id="welcome-username" class="float-right" style="margin-right: 20px; font-size: 1.5rem;">Welcome User!</div>
+                  <div id="welcome-username" class="float-right" style="margin-right: 20px; font-size: 1.5rem;">Welcome <var id="welcome-username">User!</var></div>
                   <div id="welcome-guest" class="float-right" style="margin-right: 20px; font-size: 1.5rem">Welcome Guest!</div>
                 </div>
               </div>
