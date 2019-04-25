@@ -40,10 +40,10 @@ function updateserverList() {
     console.log(room);
     try {
         roomHTML += ` <tr>
-        <th scope="row">${room.roomName}</th>
-        <td>${room.createdBy}</td>
-        <td>${room.gameMode}</td>
-        <td>${room.playerCount}</td>
+        <td style="color: ghostwhite;" scope="row">${room.roomName}</th>
+        <td style="color: ghostwhite;" >${room.createdBy}</td>
+        <td style="color: ghostwhite;" >${room.gameMode}</td>
+        <td style="color: ghostwhite;" >${room.playerCount}</td>
         <td><button class="btn btn-primary btn-block" onClick="Client.joinRoom('${room.KEY}')">Join</button></td>
       </tr>`;
       console.log("appending to table");
