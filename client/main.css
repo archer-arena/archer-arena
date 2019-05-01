@@ -34,6 +34,7 @@ html, body {
   max-height: 100%;
   height: 125px;
   margin-top: 5%;
+  margin-bottom: 5%;
 }
 /* Main Menu Overlay */
 #overlay-lobby-menu {
