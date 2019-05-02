@@ -1,0 +1,17 @@
+config:
+  target: "http://localhost:4200"
+  engine: "socketio"
+  phases:
+    - duration: 600
+      arrivalRate: 5
+scenarios:
+  - name: "Connect a bunch of simulated users into our server"
+    flow:
+      - get: 
+          url: "/"
+      - loop:
+          - emit:
+              channel: "join server"
+              data: "I have joined the server"
+          - think: 1
+        count: 50

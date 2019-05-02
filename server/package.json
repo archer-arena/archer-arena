@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "stress-test": "artillery run stress-test.yaml"
   },
   "author": "",
   "license": "ISC",
@@ -17,5 +18,10 @@
     "request": "^2.88.0",
     "socket.io": "^2.2.0",
     "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "artillery": "^1.6.0-27",
+    "chai": "^4.2.0",
+    "mocha": "^6.1.4"
   }
 }
