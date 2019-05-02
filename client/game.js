@@ -68,8 +68,11 @@ function preload()
 
   //-----MAP-----//
 
-  this.load.image('tileset', 'assets/graphics/map/tilemaps/tiles_packed.png');
-  this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/test_map.json');
+  //this.load.image('tileset', 'assets/graphics/map/tilemaps/tiles_packed.png');
+  this.load.image('tileset', 'assets/graphics/map/tilemaps/snow-expansion.png');
+  //this.load.tilemapTiledJSON('map','assets/graphics/map/Room Template/test_map.json');
+  //this.load.tilemapTiledJSON('map_desert','assets/graphics/map/Room Template/map_ctf_desert.json');
+  this.load.tilemapTiledJSON('map_snow','assets/graphics/map/Room Template/map_ctf.json');
 
   //----FONT----//
   this.load.bitmapFont('pixel', 'assets/fonts/pixel.png', 'assets/fonts/pixel.xml');
@@ -105,8 +108,8 @@ function create()
   this.add.image(400, 300, 'map_layer3');
   */
 
-  const map = this.make.tilemap({key: 'map'})
-  const tileset = map.addTilesetImage('tiles_packed', 'tileset');
+  const map = this.make.tilemap({key: 'map_snow'})
+  const tileset = map.addTilesetImage('snow-expansion', 'tileset');
 
   const belowLayer = map.createStaticLayer('ground', tileset, 0, 0);
   worldLayer = map.createStaticLayer('wall', tileset, 0, 0);

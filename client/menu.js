@@ -1,6 +1,6 @@
 function playAsGuest() {
-    $("#overlay-start-menu").remove();
-    Client.joinOrCreateRandomRoom();
+    // $("#overlay-start-menu").remove();
+    // Client.joinOrCreateRandomRoom();
 }
 
 function mainMenu() {
@@ -37,6 +37,15 @@ function isLoggedIn() {
         $("#welcome-username").removeClass("d-none");
         Auth.setProfile();
     }
+}
+
+function loggedInAsGuest() {
+    $("#log-in-menu").addClass("d-none");
+    $("#overlay-lobby-menu").removeClass("d-none");
+    $("#log-out-btn").addClass("d-none");
+    $("#main-menu-btn").removeClass("d-none");
+    $("#welcome-guest").removeClass("d-none");
+    $("#welcome-username").addClass("d-none");
 }
 
 function clearRegForm() {
