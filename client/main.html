@@ -53,7 +53,7 @@
                 </div>
                 <div class="row justify-content-center">
                   <div class="col-4 col-sm-3 col-lg-4">
-                    <button type="button" class="btn btn-primary w-100" onclick="lobbyMenuOnLogIn()">Log In</button>
+                    <button type="button" class="btn btn-primary w-100" onclick="loggedIn()">Log In</button>
                   </div>
                 </div>
                 <div class="row justify-content-center">
@@ -68,13 +68,12 @@
                 <br>
                 <div class="row justify-content-center">
                   <div class="col-5 col-sm-3 col-lg-4">
-                    <button type="button" class="btn btn-secondary w-100" onclick="lobbyMenuOn()">Play as Guest</button>
+                    <button type="button" class="btn btn-secondary w-100" onclick="playAsGuest()">Play as Guest</button>
                   </div>
                 </div>
                 <br>
               </form>
             </div>
-
           </div>
         </div>
       </div>
@@ -123,15 +122,14 @@
                 <div id="lobby-title">Game Lobby</div>
               </div>
               <div class="col-5 col-lg-6">
-                <button type="button" id="main-menu-btn" class="btn btn-primary float-right"
-                  onclick="lobbyMenuOff()">Main
+                <button type="button" id="main-menu-btn" class="btn btn-primary float-right" onclick="mainMenu()">Main
                   Menu</button>
                 <button type="button" id="log-out-btn" class="btn btn-primary float-right" onclick="mainMenu()">Log
                   Out</button>
                 <div id="welcome-username" class="float-right" style="margin-right: 20px; font-size: 1.5rem;">Welcome
                   User!</div>
-                <div id="welcome-guest" class="float-right" style="margin-right: 20px; font-size: 1.5rem">Welcome
-                  Guest!</div>
+                <div id="welcome-guest" class="float-right" style="margin-right: 20px; font-size: 1.5rem">Welcome Guest!
+                </div>
               </div>
             </div>
           </div>
@@ -171,19 +169,21 @@
         <div class="col-10">
           <!---------------- Server List Start ---------------->
           <div class="shadow-lg" style="border-radius: 25px; padding: 15px 15px 5px 15px;">
-            <table class="table">
-              <thead>
-                <tr>
-                  <th scope="col">Server Name</th>
-                  <th scope="col">Creator</th>
-                  <th scope="col">Game Mode</th>
-                  <th scope="col">Players</th>
-                </tr>
-              </thead>
-              <tbody id="lobby-overlay">
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Server Name</th>
+                    <th scope="col">Creator</th>
+                    <th scope="col">Game Mode</th>
+                    <th scope="col">Players</th>
+                  </tr>
+                </thead>
+                <tbody id="lobby-overlay">
 
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
           <!---------------- Server List End ---------------->
         </div>
@@ -235,17 +235,17 @@
               <div class="col-6">
                 <select class="custom-select custom-select-lg mb-3" id="map-type-modal">
                   <option selected>Map Type</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  <option value="1">Snow</option>
+                  <option value="2">Desert</option>
+                  <option value="3">Forest</option>
                 </select>
               </div>
               <div class="col-6">
                 <select class="custom-select custom-select-lg mb-3" id="game-mode-modal">
                   <option selected>Game Mode</option>
-                  <option value="1">One</option>
-                  <option value="2">Two</option>
-                  <option value="3">Three</option>
+                  <option value="1">Co-Op</option>
+                  <option value="2">Single Player</option>
+                  <option value="3">Battle Royal</option>
                 </select>
               </div>
             </div>
@@ -253,7 +253,7 @@
               <div class="col-12">
                 <div class="input-class">
                   <input class="w-25 float-right" type="number" id="player-count" placeholder="Max Players"
-                    style="margin-top:10px; border-radius:6px;">
+                    style="margin-top:10px; border-radius:6px;" min="1" max="15">
                 </div>
               </div>
             </div>
@@ -484,20 +484,7 @@
 
   </div>
   </div>
-
   <script type="text/javascript" src="./interface.js"></script>
-
-  <script>
-    function lobbyMenuOn() {
-      playAsGuest();
-    }
-    function lobbyMenuOnLogIn() {
-      loggedIn();
-    }
-    function lobbyMenuOff() {
-      mainMenu();
-    }
-
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
     integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
