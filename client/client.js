@@ -8,9 +8,10 @@ const socket = io();
 
 var Client = {
   roomData: null,
-  playerData: {
-    name: ''
-  },
+  
+  // playerdata schema:
+  // name, nickname, picture, sub, updated_at
+  playerData: {},
   lobby: [],
   /*
     Call this in Preload(), this will connect the client (user) to...

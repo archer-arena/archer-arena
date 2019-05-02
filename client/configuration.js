@@ -17,7 +17,7 @@ var config =
   },
 
   playerOptions: {
-    arrowSpeed: 200,
+    arrowSpeed: 300,
     controls: {
       'up': Phaser.Input.Keyboard.KeyCodes.W,
       'down': Phaser.Input.Keyboard.KeyCodes.S,
@@ -27,8 +27,8 @@ var config =
   },
 
   mapOptions: {
-    width: 420,
-    height: 420,
+    width: 1024,
+    height: 1024,
     type: null // Map type... Desert/Snow/etc?
   }
 };
