@@ -5,6 +5,10 @@ module.exports = function (app) {
     // Registration
     router.route('/register')
       .post(auth.register)
+
+    // Login
+    router.route('/login')
+      .get(auth.login)
   
     app.use('/api', router);
   }
